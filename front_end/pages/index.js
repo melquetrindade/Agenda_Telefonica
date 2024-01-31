@@ -1,4 +1,4 @@
-//import styles from './page.module.css'
+//import styles from '../styles/index.module.css'
 import React, {useState} from 'react';
 
 export default function Home() {
@@ -28,7 +28,7 @@ export default function Home() {
       .then(data => {
         // Manipula os dados recebidos
         console.log('deu certo')
-        console.log(data[0].nome);
+        console.log(data[3].nome);
       })
       .catch(error => {
         // Trata erros durante a requisição
@@ -63,6 +63,6 @@ export default function Home() {
   //cadastrarDados()
 
   return (
-    <h1>Hello, word</h1>
+    <h1>Página Principal</h1>
   )
 }

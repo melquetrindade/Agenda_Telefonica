@@ -21,24 +21,24 @@ export default function NavBar(){
                     style={{ maxHeight: '100px' }}
                     navbarScroll
                 >
-                    <Nav.Link href="#action1">Home</Nav.Link>
+                    <Nav.Link href="/">Home</Nav.Link>
 
                     <Nav.Link href="#action3">Favoritos</Nav.Link>
 
                     <NavDropdown title="CRUD" id="navbarScrollingDropdown">
-                        <NavDropdown.Item href="#action4">
+                        <NavDropdown.Item href="/create_contacts">
                             Criar novo Contato
                         </NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action5">
+                        <NavDropdown.Item href="/edit_contacts">
                             Editar Contato
                         </NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action6">
+                        <NavDropdown.Item href="/delete_contacts">
                             Deletar Contato
                         </NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action7">
+                        <NavDropdown.Item href="/load_contacts">
                             Listar Contatos
                         </NavDropdown.Item>
                     </NavDropdown>
