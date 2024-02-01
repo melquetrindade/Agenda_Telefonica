@@ -2,84 +2,48 @@ import React, { useState } from "react";
 import styles from '../styles/load_contacts.module.css'
 
 export default function LoadContacts(){
-
-    const [data, setData] = useState(undefined)
-    const [states, setStates] = useState('load')
-
-    /*
+    
     const [status, setStatus] = useState({
-        dados: [],
+        dados: undefined,
         status: 'load'
-    })*/
-
-    //console.log(status.dados.length)
-    //console.log(status.status)
-
-    console.log(data)
-    console.log(states)
+    })
 
     const apiUrl = 'http://127.0.0.1:8000/clientes/'
 
     const carregaDados = async () => {
-        console.log('entrou no carrega')
     
         try {
-            // Substitua 'sua_url_da_api' pela URL real da sua API Django
             const response = await fetch(apiUrl);
             
             if (!response.ok) {
-              throw new Error('Erro ao buscar dados da API');
+              setStatus({
+                dados: undefined,
+                status: 'erro'
+              })
             }
-    
-            // Convertendo a resposta para JSON
+
             const data = await response.json();
-    
-            // Atualizando o estado com os dados da API
-            //setDadosDaAPI(data);
-            console.log('entrou aqui')
-            setData(data)
-            setStates('ok')
+
+            setStatus({
+                dados: data,
+                status: 'ok'
+            })
+
           } catch (error) {
             console.error('Erro na requisição da API:', error.message);
+            setStatus({
+                dados: undefined,
+                status: 'erro'
+            })
           }
     }
 
-
-    if(data == undefined && states == 'load'){
-        console.log('entrou no if do carregar')
+    if(status.dados == undefined && status.status == 'load'){
         carregaDados()
     }
 
-    if(states == 'ok'){
-        console.log('ok')
-    }
-
-    if(data != undefined){
-        console.log('entrou na confirmação')
-        console.log(data)
-    }
-    //carregaDados2()
-    
     return(
-        <main>
-            {
-                states == 'load'
-                ?
-                    <Load/>
-                :
-                states == 'erro'
-                ?
-                    <Error/>
-                :
-                    <Listar data={data}/>
-
-            }
-        </main>
-    )
-}
-
-/*
-<main>
+        <main className={styles.main}>
             {
                 status.status == 'load'
                 ?
@@ -93,17 +57,24 @@ export default function LoadContacts(){
 
             }
         </main>
-*/
+    )
+}
 
 function Listar({data}){
-    
-    console.log('entrou aqui')
-    //console.log(data)
 
     return(
         <div>
+            <h1>Lista de Contatos</h1>
+            <hr></hr>
             {
-                data[0].nome
+                data.map((contato) => (
+                    <div>
+                        <h5>Nome: {contato.nome}</h5>
+                        <p>Endereço: {contato.endereco}</p>
+                        <p>Idade: {contato.idade}</p>
+                        <hr></hr>
+                    </div>
+                ))
             }
         </div>
     )
