@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import MainContainer from '../components/mainContainer'
 import Head from 'next/head'
+import {notification} from 'antd'
 
 export const metadata = {
   title: 'Agenda Telefonica',
