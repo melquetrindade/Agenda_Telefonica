@@ -25,6 +25,8 @@ export default function NavBar(){
 
                     <Nav.Link href="#action3">Favoritos</Nav.Link>
 
+                    <Nav.Link href="/contacts">Contatos</Nav.Link>
+
                     <NavDropdown title="CRUD" id="navbarScrollingDropdown">
                         <NavDropdown.Item href="/create_contacts">
                             Criar novo Contato

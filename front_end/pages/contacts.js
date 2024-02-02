@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import styles from '../styles/delete_contacts.module.css'
+import { useRouter } from "next/router";
+import styles from '../styles/contacts.module.css'
 import {notification, message} from 'antd'
 
 import Button from 'react-bootstrap/Button';
@@ -10,6 +11,8 @@ export default function DeleteContacts(){
         dados: undefined,
         status: 'load'
     })
+
+    const router = useRouter()
 
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
@@ -99,6 +102,13 @@ export default function DeleteContacts(){
         }
     }
 
+    const navPagEdit = ({idContato}) => {
+        router.push({
+            pathname: './edit_contacts',
+            query: {id: idContato}
+        })
+    }
+
     return(
         <main className={styles.main}>
             {contextHolder}
@@ -112,14 +122,14 @@ export default function DeleteContacts(){
                 ?
                     <Error/>
                 :
-                    <Listar data={status.dados} func={deletarContato}/>
+                    <Listar data={status.dados} func={deletarContato} funcEdit={navPagEdit}/>
 
             }
         </main>
     )
 }
 
-function Listar({data, func}){
+function Listar({data, func, funcEdit}){
 
     return(
         <div>
@@ -132,6 +142,9 @@ function Listar({data, func}){
                         <p>Endereço: {contato.endereco}</p>
                         <p>Idade: {contato.idade}</p>
                         <div className="d-grid gap-2">
+                            <Button variant="outline-primary" size="sm" onClick={() => funcEdit({idContato: contato.id})}>
+                                Editar Contato
+                            </Button>
                             <Button variant="outline-danger" size="sm" onClick={() => func({idContato: contato.id})}>
                                 Deletar Contato
                             </Button>

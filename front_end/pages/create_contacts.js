@@ -77,7 +77,6 @@ export default function DeleteContacts(){
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Adicione outros cabeçalhos, como tokens de autenticação, se necessário
       },
       body: JSON.stringify(objData),
     })
