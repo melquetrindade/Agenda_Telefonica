@@ -57,23 +57,23 @@ export default function DeleteContacts(){
     const formatData = () => {
 
         const registerData = {
-        nome: document.getElementById('formGridName').value,
-        endereco: document.getElementById('formGridAddress').value,
-        idade: document.getElementById('formGridAge').value,
+            nome: document.getElementById('formGridName').value,
+            endereco: document.getElementById('formGridAddress').value,
+            idade: document.getElementById('formGridAge').value,
         };
 
         if(!registerData.nome){
-        openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+            openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
         }
         else if(!registerData.endereco){
-        openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+            openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
         }
         else if(!registerData.idade){
-        openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+            openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
         }
         else{
-        console.log('chama função de cadastrar')
-        cadastrarDados({objData: registerData})
+            console.log('chama função de cadastrar')
+            editaDados({objData: registerData})
         }
         //console.log(document.getElementById('formGridName').value)
         //console.log(document.getElementById('formGridAge').value)
@@ -112,10 +112,10 @@ export default function DeleteContacts(){
         carregaDados()
     }
 
-    const cadastrarDados = async ({objData}) => {
+    const editaDados = async ({objData}) => {
         openMessage()
-        fetch(apiUrl, {
-        method: 'POST',
+        fetch(contatoUrl, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -123,12 +123,16 @@ export default function DeleteContacts(){
         })
         .then(response => {
             if (!response.ok) {
-            throw new Error(`Erro na requisição: ${response.status}`);
+                throw new Error(`Erro na requisição: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            openNotification({placement: 'topRight', title: 'Contato Cadastrado', descricao: 'O Contado foi Cadastrado com Sucesso!'})
+            openNotification({placement: 'topRight', title: 'Contato Editado', descricao: 'As Alterações foram feitas com Sucesso!'})
+            setTimeout(function () {
+                // Ação que será executada após o tempo específico
+                router.back()
+              }, 2000);
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
@@ -247,7 +251,7 @@ function Forms({context01, context02, changeName, changeAge, changeAddress, nome
                 </Form.Group>
 
                 <Button variant="primary" onClick={func}>
-                    Cadastrar
+                    Salvar Alterações
                 </Button>
             </Form>
         </>
