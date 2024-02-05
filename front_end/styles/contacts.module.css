@@ -17,3 +17,9 @@
   max-width: 98.9vw;
   background-color: beige;
 }
+
+.contButton{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

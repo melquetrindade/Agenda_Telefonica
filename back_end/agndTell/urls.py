@@ -16,11 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from agndTell_app.views import ClientesViewSet
+#from agndTell_app.views import ClientesViewSet, EnderecoContatoViewSet
+from agndTell_app.views import ContatosViewSet, TelefonesViewSet, EnderecoContatoViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'clientes', ClientesViewSet)
+#router.register(r'clientes', ClientesViewSet)
+router.register(r'contatos', ContatosViewSet)
+router.register(r'enderecos', EnderecoContatoViewSet)
+router.register(r'telefones', TelefonesViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

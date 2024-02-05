@@ -109,6 +109,12 @@ export default function DeleteContacts(){
         })
     }
 
+    const navPagCreate = () => {
+        router.push({
+            pathname: './create_contacts',
+        })
+    }
+
     return(
         <main className={styles.main}>
             {contextHolder}
@@ -122,18 +128,24 @@ export default function DeleteContacts(){
                 ?
                     <Error/>
                 :
-                    <Listar data={status.dados} func={deletarContato} funcEdit={navPagEdit}/>
+                    <Listar data={status.dados} func={deletarContato} funcEdit={navPagEdit} funcCreate={navPagCreate}/>
 
             }
         </main>
     )
 }
 
-function Listar({data, func, funcEdit}){
+function Listar({data, func, funcEdit, funcCreate}){
 
     return(
         <div>
             <h1>Lista de Contatos</h1>
+            <hr></hr>
+            <div className="d-grid gap-2">
+                <Button variant="outline-success" size="sm" className={styles.contButton} onClick={funcCreate}>
+                    Criar novo Contato<span class="material-symbols-outlined">add</span>
+                </Button>
+            </div>
             <hr></hr>
             {
                 data.map((contato) => (
@@ -142,11 +154,11 @@ function Listar({data, func, funcEdit}){
                         <p>Endereço: {contato.endereco}</p>
                         <p>Idade: {contato.idade}</p>
                         <div className="d-grid gap-2">
-                            <Button variant="outline-primary" size="sm" onClick={() => funcEdit({idContato: contato.id})}>
-                                Editar Contato
+                            <Button variant="outline-primary" size="sm" className={styles.contButton} onClick={() => funcEdit({idContato: contato.id})}>
+                                Editar Contato<span class="material-symbols-outlined">edit</span>
                             </Button>
-                            <Button variant="outline-danger" size="sm" onClick={() => func({idContato: contato.id})}>
-                                Deletar Contato
+                            <Button variant="outline-danger" size="sm" className={styles.contButton} onClick={() => func({idContato: contato.id})}>
+                                Deletar Contato<span class="material-symbols-outlined">delete</span>
                             </Button>
                         </div>
                         <hr></hr>

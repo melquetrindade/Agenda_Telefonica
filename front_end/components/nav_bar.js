@@ -26,24 +26,6 @@ export default function NavBar(){
                     <Nav.Link href="#action3">Favoritos</Nav.Link>
 
                     <Nav.Link href="/contacts">Contatos</Nav.Link>
-
-                    <NavDropdown title="CRUD" id="navbarScrollingDropdown">
-                        <NavDropdown.Item href="/create_contacts">
-                            Criar novo Contato
-                        </NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="/edit_contacts">
-                            Editar Contato
-                        </NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="/delete_contacts">
-                            Deletar Contato
-                        </NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="/load_contacts">
-                            Listar Contatos
-                        </NavDropdown.Item>
-                    </NavDropdown>
                     
                 </Nav>
                 <Form className="d-flex">

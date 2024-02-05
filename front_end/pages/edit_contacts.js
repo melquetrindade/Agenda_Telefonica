@@ -132,7 +132,7 @@ export default function DeleteContacts(){
             setTimeout(function () {
                 // Ação que será executada após o tempo específico
                 router.back()
-              }, 2000);
+            }, 2000);
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);

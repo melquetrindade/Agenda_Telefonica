@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import styles from '../styles/create_contacts.module.css'
 import {notification, message} from 'antd'
+import { useRouter } from "next/router";
 
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -8,6 +9,8 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
 export default function DeleteContacts(){
+
+  const router = useRouter()
 
   const [inputValue, setInput] = useState({
     nome: '',
@@ -88,6 +91,9 @@ export default function DeleteContacts(){
       })
       .then(data => {
         openNotification({placement: 'topRight', title: 'Contato Cadastrado', descricao: 'O Contado foi Cadastrado com Sucesso!'})
+        setTimeout(function () {
+          router.back()
+        }, 2000);
       })
       .catch(error => {
         console.error('Erro durante a requisição POST:', error);
