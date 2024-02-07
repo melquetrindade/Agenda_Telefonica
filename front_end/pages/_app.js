@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import MainContainer from '../components/mainContainer'
 import Head from 'next/head'
-import {notification} from 'antd'
+import React, {useState} from "react";
 
 export const metadata = {
   title: 'Agenda Telefonica',
@@ -9,6 +9,7 @@ export const metadata = {
 }
 
 export default function MyApp({ Component, pageProps }) {
+
   return(
     <div>
       <MainContainer>
@@ -21,14 +22,87 @@ export default function MyApp({ Component, pageProps }) {
       </MainContainer>
     </div>
   )
+
 }
 
 /*
-return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+export default function MyApp({ Component, pageProps }) {
+
+  const [isUser, setUser] = useState(null)
+  console.log(isUser)
+
+  const loginUser = async ({email, password}) => {
+
+    const apiUrl = 'http://127.0.0.1:8000/api/login/'
+    console.log(email)
+    console.log(password)
+    const credentialsUser = {
+      username: email,
+      password: password
+    };
+
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentialsUser),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro na requisição: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        
+        openNotification({placement: 'topRight', title: 'Contato Cadastrado', descricao: 'O Contado foi Cadastrado com Sucesso!'})
+        setTimeout(function () {
+          router.back()
+        }, 2000);
+        console.log('deu certo')
+        console.log(data)
+        setUser(data)
+      })
+      .catch(error => {
+        console.error('Erro durante a requisição POST:', error);
+      });
+  }
+
+  if(isUser){
+    return(
+      <div>
+        <MainContainer>
+          <Head>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+          </Head>
+          <Component {...pageProps} />
+        </MainContainer>
+      </div>
+    )
+  }
+
+  return (
+    <main className={styles.main}>
+      <div className={styles.body}> 
+        <h1>Bem-Vindo</h1>
+        <Form>
+          <Form.Group className="mb-3" controlId="formGroupEmail">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control type="email" placeholder="Enter email" />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formGroupPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" placeholder="Password" />
+          </Form.Group>
+        </Form>
+
+        <Button variant="primary" onClick={() => loginUser({email: 'melque@gmail.com', password: '12ju2002'})}>
+            Login
+        </Button>
+      </div>
+    </main>
   )
-
-
-*/
+}*/
