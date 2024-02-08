@@ -116,6 +116,13 @@ export default function DeleteContacts(){
         })
     }
 
+    const navPagDetails = async ({idContato, nomeContato}) => {
+        router.push({
+            pathname: './details_contacts',
+            query: {id: idContato, nome: nomeContato}
+        })
+    }
+
     return(
         <main className={styles.main}>
             {contextHolder}
@@ -129,14 +136,14 @@ export default function DeleteContacts(){
                 ?
                     <Error/>
                 :
-                    <Listar data={status.dados} func={deletarContato} funcEdit={navPagEdit} funcCreate={navPagCreate}/>
+                    <Listar data={status.dados} func={deletarContato} funcEdit={navPagEdit} funcCreate={navPagCreate} funcDetails={navPagDetails}/>
 
             }
         </main>
     )
 }
 
-function Listar({data, func, funcEdit, funcCreate}){
+function Listar({data, func, funcEdit, funcCreate, funcDetails}){
 
     return(
         <div className={styles.body}>
@@ -157,7 +164,7 @@ function Listar({data, func, funcEdit, funcCreate}){
                                     <Card.Title className={styles.name}>{contato.nome}</Card.Title>
                                     <hr></hr>
                                     <div className={styles.containerButtons}>
-                                        <Button variant="outline-dark" size="sm">
+                                        <Button variant="outline-dark" size="sm" onClick={() => funcDetails({idContato: contato.id, nomeContato: contato.nome})}>
                                             Detalhes<span class="material-symbols-outlined">person</span>
                                         </Button>
                                         <Button variant="outline-primary" size="sm" onClick={() => funcEdit({idContato: contato.id})}>
