@@ -4,6 +4,7 @@ import styles from '../styles/contacts.module.css'
 import {notification, message} from 'antd'
 
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
 export default function DeleteContacts(){
     
@@ -42,7 +43,7 @@ export default function DeleteContacts(){
         }, 1000);
     };
 
-    const apiUrl = 'http://127.0.0.1:8000/clientes/'
+    const apiUrl = 'http://127.0.0.1:8000/contatos/'
 
     const carregaDados = async () => {
     
@@ -78,7 +79,7 @@ export default function DeleteContacts(){
 
     const deletarContato = async ({idContato}) => {
         openMessage()
-        const apiUrl = `http://127.0.0.1:8000/clientes/${idContato}/`
+        const apiUrl = `http://127.0.0.1:8000/contatos/${idContato}/`
     
         try {
             const response = await fetch(apiUrl, {
@@ -138,33 +139,40 @@ export default function DeleteContacts(){
 function Listar({data, func, funcEdit, funcCreate}){
 
     return(
-        <div>
+        <div className={styles.body}>
             <h1>Lista de Contatos</h1>
             <hr></hr>
-            <div className="d-grid gap-2">
-                <Button variant="outline-success" size="sm" className={styles.contButton} onClick={funcCreate}>
+            <div className={styles.cont}>
+                <Button variant="outline-success" size="sm" onClick={funcCreate}>
                     Criar novo Contato<span class="material-symbols-outlined">add</span>
                 </Button>
             </div>
             <hr></hr>
-            {
-                data.map((contato) => (
-                    <div>
-                        <h5>Nome: {contato.nome}</h5>
-                        <p>Endereço: {contato.endereco}</p>
-                        <p>Idade: {contato.idade}</p>
-                        <div className="d-grid gap-2">
-                            <Button variant="outline-primary" size="sm" className={styles.contButton} onClick={() => funcEdit({idContato: contato.id})}>
-                                Editar Contato<span class="material-symbols-outlined">edit</span>
-                            </Button>
-                            <Button variant="outline-danger" size="sm" className={styles.contButton} onClick={() => func({idContato: contato.id})}>
-                                Deletar Contato<span class="material-symbols-outlined">delete</span>
-                            </Button>
+            <div className={styles.containerContacts}>
+                {
+                    data.map((contato) => (
+                        <div>
+                            <Card >
+                                <Card.Body>
+                                    <Card.Title className={styles.name}>{contato.nome}</Card.Title>
+                                    <hr></hr>
+                                    <div className={styles.containerButtons}>
+                                        <Button variant="outline-dark" size="sm">
+                                            Detalhes<span class="material-symbols-outlined">person</span>
+                                        </Button>
+                                        <Button variant="outline-primary" size="sm" onClick={() => funcEdit({idContato: contato.id})}>
+                                            Editar<span class="material-symbols-outlined">edit</span>
+                                        </Button>
+                                        <Button variant="outline-danger" size="sm" onClick={() => func({idContato: contato.id})}>
+                                            Deletar<span class="material-symbols-outlined">delete</span>
+                                        </Button>
+                                    </div>
+                                </Card.Body>
+                            </Card>
                         </div>
-                        <hr></hr>
-                    </div>
-                ))
-            }
+                    ))
+                }
+            </div>
         </div>
     )
 }

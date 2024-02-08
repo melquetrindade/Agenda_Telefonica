@@ -14,12 +14,114 @@
 }
 
 .main{
+  margin-top: 1rem;
   max-width: 98.9vw;
-  background-color: beige;
 }
 
-.contButton{
+.body{
+  width: 80vw;
+}
+
+.body > h1{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.name{
+  text-align: center;
+  width: 80%;
+  font-size: 1.1rem;
+  font-weight: 400;
+  transform: translateX(18px);
+}
+
+.cont{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cont > Button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.containerButtons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.containerButtons > Button{
+  margin-left: 5px;
+  width: 50%;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.containerButtons > Button > span{
+  font-size: 1rem;
+}
+
+.containerContacts{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  width: 100%;
+}
+
+.containerContacts > div{
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 650px) {
+  .body{
+    width: 100%;
+  }
+
+  .containerContacts > div{
+    margin-left: 0px;
+  }
+
+  .containerContacts{
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 651px) and (max-width: 870px){
+  .body{
+    width: 100%;
+  }
+
+  .containerContacts > div{
+    margin-left: 10px;
+  }
+
+  .containerContacts{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 70%;
+  }
+}
+
+@media screen and (min-width: 871px) and (max-width: 1350px){
+  .body{
+    width: 100%;
+  }
+
+  .containerContacts > div{
+    margin-left: 10px;
+  }
+
+  .containerContacts{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 50%;
+  }
 }
