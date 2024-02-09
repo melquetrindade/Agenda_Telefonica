@@ -37,7 +37,7 @@ export default function DetailsContacts(){
             }
 
             const data = await response.json();
-            var filterData = data.filter(item => item.owner == 3)
+            var filterData = data.filter(item => item.owner == id)
 
             setStatus({
                 dadosTell: filterData,
@@ -73,7 +73,7 @@ export default function DetailsContacts(){
 
             const data = await response.json();
 
-            var filterData = data.filter(item => item.contato == 3)
+            var filterData = data.filter(item => item.contato == id)
 
             setStatus({
                 dadosTell: status.dadosTell,
@@ -134,28 +134,41 @@ function Listar({objTell, objEnd, nameContato}){
                         <div className={styles.contextTell}>
                             <h1>Telefones</h1>
                             <hr></hr>
-                            <div>
-                                {
-                                    objTell.map((item, index) => (
-                                            <div>
-                                                <strong>Número {index + 1}:</strong> {item.telefone}
-                                            </div>
+                            {
+                                objTell.length == 0
+                                ?
+                                    <h1 className={styles.alerta}>O contato não possui Telefones!</h1>
+                                :
+                                <div>
+                                    {
+                                        objTell.map((item, index) => (
+                                                <div>
+                                                    <strong>Número {index + 1}:</strong> {item.telefone}
+                                                </div>
+                                            )
                                         )
-                                    )
-                                }
-                            </div>
+                                    }
+                                </div>
+                            }
+                            
                         </div>
                     </Col>
                     <Col>
                         <div className={styles.contextEnd}>
                             <h1>Endereço</h1>
                             <hr></hr>
-                            <div className={styles.contentEnd}>
-                                <p className={styles.container}><strong>Cidade:</strong> {objEnd[0].cidade}</p>
-                                <p className={styles.container}><strong>Bairro:</strong> {objEnd[0].bairro}</p>
-                                <p className={styles.container}><strong>Rua:</strong> {objEnd[0].rua}</p>
-                                <p className={styles.container}><strong>Nº:</strong> {objEnd[0].num}</p>
-                            </div>
+                            {
+                                objEnd.length == 0
+                                ?
+                                <h1 className={styles.alerta}>O contato não possui um Endereço!</h1>
+                                :
+                                <div className={styles.contentEnd}>
+                                    <p><strong>Cidade:</strong> {objEnd[0].cidade}</p>
+                                    <p><strong>Bairro:</strong> {objEnd[0].bairro}</p>
+                                    <p><strong>Rua:</strong> {objEnd[0].rua}</p>
+                                    <p><strong>Nº:</strong> {objEnd[0].num}</p>
+                                </div>
+                            }
                         </div>
                     </Col>
                 </Row>

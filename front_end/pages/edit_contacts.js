@@ -16,12 +16,24 @@ export default function DeleteContacts(){
 
     const [inputValue, setInput] = useState({
         nome: '',
-        endereco: '',
-        idade: '',
+        email: '',
+        rua: '',
+        bairro: '',
+        cidade: '',
+        num: ''
     })
 
-    const [states, setStates] = useState('load')
-    console.log(`estado: ${states}`)
+    const [objts, setObjts] = useState({
+        dadosContato: undefined,
+        statusContato: 'load',
+        dadosTelefone: undefined,
+        statusTelefone: 'load',
+        dadosEndereco: undefined,
+        statusEndereco: 'load'
+    })
+
+    //const [states, setStates] = useState('load')
+    //console.log(`estado: ${states}`)
 
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
@@ -51,9 +63,6 @@ export default function DeleteContacts(){
         }, 1000);
     };
 
-    const apiUrl = 'http://127.0.0.1:8000/clientes/'
-    const contatoUrl = `http://127.0.0.1:8000/clientes/${id}/`
-
     const formatData = () => {
 
         const registerData = {
@@ -80,9 +89,10 @@ export default function DeleteContacts(){
         //console.log(document.getElementById('formGridAddress').value)
     }
 
-    const carregaDados = async () => {
+    const carregaContato = async () => {
+        //console.log('entrou no contato')
         try {
-            const response = await fetch(contatoUrl, {
+            const response = await fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
@@ -90,26 +100,143 @@ export default function DeleteContacts(){
             });
             
             if (!response.ok) {
-                setStates('erro')
+                setObjts({
+                    dadosContato: undefined,
+                    statusContato: 'erro',
+                    dadosTelefone: objts.dadosTelefone,
+                    statusTelefone: objts.statusTelefone,
+                    dadosEndereco: objts.dadosEndereco,
+                    statusEndereco: objts.statusEndereco
+                })
             }
 
             const data = await response.json();
-            console.log(data)
-            setInput({
-                nome: data.nome,
-                endereco: data.endereco,
-                idade: data.idade
+            //console.log(data)
+            
+            setObjts({
+                dadosContato: data,
+                statusContato: 'ok',
+                dadosTelefone: objts.dadosTelefone,
+                statusTelefone: objts.statusTelefone,
+                dadosEndereco: objts.dadosEndereco,
+                statusEndereco: objts.statusEndereco
             })
-            setStates('ok')
 
         } catch (error) {
             console.error('Erro na requisição da API:', error.message);
-            setStates('erro')
+            setObjts({
+                dadosContato: undefined,
+                statusContato: 'erro',
+                dadosTelefone: objts.dadosTelefone,
+                statusTelefone: objts.statusTelefone,
+                dadosEndereco: objts.dadosEndereco,
+                statusEndereco: objts.statusEndereco
+            })
         }
     }
 
-    if(states == 'load' && id != undefined){
-        carregaDados()
+    const carregaTelefone = async () => {
+        //console.log('entrou no Telefone')
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/telefones/`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+            });
+            
+            if (!response.ok) {
+                setObjts({
+                    dadosContato: objts.dadosContato,
+                    statusContato: objts.statusContato,
+                    dadosTelefone: undefined,
+                    statusTelefone: 'erro',
+                    dadosEndereco: objts.dadosEndereco,
+                    statusEndereco: objts.statusEndereco
+                })
+            }
+
+            const data = await response.json();
+            var filterData = data.filter(item => item.owner == id)
+            //console.log(data)
+
+            setObjts({
+                dadosContato: objts.dadosContato,
+                statusContato: objts.statusContato,
+                dadosTelefone: filterData,
+                statusTelefone: 'ok',
+                dadosEndereco: objts.dadosEndereco,
+                statusEndereco: objts.statusEndereco
+            })
+
+        } catch (error) {
+            console.error('Erro na requisição da API:', error.message);
+            setObjts({
+                dadosContato: objts.dadosContato,
+                statusContato: objts.statusContato,
+                dadosTelefone: undefined,
+                statusTelefone: 'erro',
+                dadosEndereco: objts.dadosEndereco,
+                statusEndereco: objts.statusEndereco
+            })
+        }
+    }
+
+    const carregaEndereco = async () => {
+        //console.log('entrou no Endereco')
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/enderecos/`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+            });
+            
+            if (!response.ok) {
+                setObjts({
+                    dadosContato: objts.dadosContato,
+                    statusContato: objts.statusContato,
+                    dadosTelefone: objts.dadosTelefone,
+                    statusTelefone: objts.statusTelefone,
+                    dadosEndereco: undefined,
+                    statusEndereco: 'erro'
+                })
+            }
+
+            const data = await response.json();
+            var filterData = data.filter(item => item.contato == id)
+            //console.log(data)
+            
+            setObjts({
+                dadosContato: objts.dadosContato,
+                statusContato: objts.statusContato,
+                dadosTelefone: objts.dadosTelefone,
+                statusTelefone: objts.statusTelefone,
+                dadosEndereco: filterData,
+                statusEndereco: 'ok'
+            })
+
+        } catch (error) {
+            console.error('Erro na requisição da API:', error.message);
+            setObjts({
+                dadosContato: objts.dadosContato,
+                statusContato: objts.statusContato,
+                dadosTelefone: objts.dadosTelefone,
+                statusTelefone: objts.statusTelefone,
+                dadosEndereco: undefined,
+                statusEndereco: 'erro'
+            })
+        }
+    }
+
+    if(objts.dadosContato == undefined && objts.statusContato == 'load' && id != undefined){
+        carregaContato()
+    }
+    if(objts.dadosTelefone == undefined && objts.statusTelefone == 'load' && id != undefined){
+        carregaTelefone()
+    }
+    if(objts.dadosEndereco == undefined && objts.statusEndereco == 'load' && id != undefined){
+        carregaEndereco()
     }
 
     const editaDados = async ({objData}) => {
@@ -175,18 +302,33 @@ export default function DeleteContacts(){
         }
     }
 
+    if(objts.statusContato == 'ok' && objts.statusTelefone == 'ok' && objts.statusEndereco == 'ok'){
+        console.log('dados do contato:')
+        console.log(objts.dadosContato)
+        console.log('dados do telefone:')
+        console.log(objts.dadosTelefone)
+        console.log('dados do endereço:')
+        console.log(objts.dadosEndereco)
+    }
+
     return(
         <main className={styles.main}>
             {
-                states == 'load'
+                objts.statusContato == 'load' || objts.statusEndereco == 'load' || objts.statusTelefone == 'load'
                 ?
                     <Load/>
                 :
-                states == 'erro'
+                objts.statusContato == 'erro' || objts.statusEndereco == 'erro' || objts.statusTelefone == 'erro'
                 ?
                     <Error/>
                 :
-                    <Forms
+                    <h1>teste</h1>
+            }
+        </main>
+    )
+}
+/*
+<Forms
                         context01={contextHolder}
                         context02={contextHolder2}
                         changeName={handleChangeName}
@@ -197,11 +339,7 @@ export default function DeleteContacts(){
                         endereco={inputValue.endereco}
                         func={formatData}
                     />
-            }
-        </main>
-    )
-}
-
+*/
 function Forms({context01, context02, changeName, changeAge, changeAddress, nome, idade, endereco, func}){
     return(
         <>

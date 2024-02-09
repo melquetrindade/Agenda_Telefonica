@@ -22,9 +22,13 @@
   width: 70vw;
 }
 
+.alerta{
+  font-weight: 300;
+  font-size: 1.5rem;
+}
+
 .contextTell{
   margin-right: 20px;
-  background-color: blue;
 }
 
 .contextTell > h1{
@@ -35,19 +39,13 @@
   font-weight: 300;
 }
 
-.contextEnd{
-  background-color: beige;
-}
-
-.container {
+.contentEnd > p{
   width: 100%; /* largura máxima do contêiner */
   white-space: nowrap; /* impede que o texto seja quebrado em várias linhas */
   overflow: hidden; /* oculta qualquer conteúdo que ultrapasse a largura do contêiner */
   text-overflow: ellipsis; /* exibe um indicador de elipse (...) quando o texto é cortado */
   line-height: 1;
-  background-color: blue;
 }
-
 
 @media screen and (max-width: 650px) {
   .body{
