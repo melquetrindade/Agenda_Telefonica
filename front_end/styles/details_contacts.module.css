@@ -13,7 +13,48 @@
     z-index: 10;
   }
   
-  .main{
-    margin-top: 1rem;
-    max-width: 98.9vw;
+.main{
+  margin-top: 1rem;
+  max-width: 98.9vw;
+}
+
+.body{
+  width: 70vw;
+}
+
+.contextTell{
+  margin-right: 20px;
+  background-color: blue;
+}
+
+.contextTell > h1{
+  font-weight: 300;
+}
+
+.contextEnd > h1{
+  font-weight: 300;
+}
+
+.contextEnd{
+  background-color: beige;
+}
+
+.container {
+  width: 100%; /* largura máxima do contêiner */
+  white-space: nowrap; /* impede que o texto seja quebrado em várias linhas */
+  overflow: hidden; /* oculta qualquer conteúdo que ultrapasse a largura do contêiner */
+  text-overflow: ellipsis; /* exibe um indicador de elipse (...) quando o texto é cortado */
+  line-height: 1;
+  background-color: blue;
+}
+
+
+@media screen and (max-width: 650px) {
+  .body{
+    width: 95vw;
   }
+
+  .contextTell{
+    margin-right: 0px;
+  }
+}

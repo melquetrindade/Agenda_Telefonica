@@ -2,14 +2,16 @@ import React, {useState} from "react";
 import { useRouter } from "next/router";
 import styles from '../styles/details_contacts.module.css'
 
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+
 export default function DetailsContacts(){
 
     const router = useRouter()
     const { id, nome } = router.query
     console.log(`id: ${id} - nome: ${nome}`)
 
-    //const [telefones, setTelefones] = useState(undefined)
-    //const [enderecos, setEnderecos] = useState(undefined)
     const [status, setStatus] = useState({
         dadosTell: undefined,
         dadosEnd: undefined,
@@ -35,7 +37,7 @@ export default function DetailsContacts(){
             }
 
             const data = await response.json();
-            var filterData = data.filter(item => item.owner == 1)
+            var filterData = data.filter(item => item.owner == 3)
 
             setStatus({
                 dadosTell: filterData,
@@ -71,7 +73,7 @@ export default function DetailsContacts(){
 
             const data = await response.json();
 
-            var filterData = data.filter(item => item.contato == 1)
+            var filterData = data.filter(item => item.contato == 3)
 
             setStatus({
                 dadosTell: status.dadosTell,
@@ -110,20 +112,55 @@ export default function DetailsContacts(){
                 ?
                     <Error/>
                 :
-                    <Listar objTell={status.dadosTell} objEnd={status.dadosEnd}/>
+                    <Listar objTell={status.dadosTell} objEnd={status.dadosEnd} nameContato={nome}/>
             }
         </main>
     )
 }
 
-function Listar({objTell, objEnd}){
+function Listar({objTell, objEnd, nameContato}){
     console.log('entrou no listar')
     console.log(objTell)
     console.log(objEnd)
 
 
     return(
-        <h1>Função de Listagem</h1>
+        <main className={styles.body}>
+            <Container>
+                <h1>Informações de {nameContato}</h1>
+                <hr></hr>
+                <Row className={styles.containerCol}>
+                    <Col>
+                        <div className={styles.contextTell}>
+                            <h1>Telefones</h1>
+                            <hr></hr>
+                            <div>
+                                {
+                                    objTell.map((item, index) => (
+                                            <div>
+                                                <strong>Número {index + 1}:</strong> {item.telefone}
+                                            </div>
+                                        )
+                                    )
+                                }
+                            </div>
+                        </div>
+                    </Col>
+                    <Col>
+                        <div className={styles.contextEnd}>
+                            <h1>Endereço</h1>
+                            <hr></hr>
+                            <div className={styles.contentEnd}>
+                                <p className={styles.container}><strong>Cidade:</strong> {objEnd[0].cidade}</p>
+                                <p className={styles.container}><strong>Bairro:</strong> {objEnd[0].bairro}</p>
+                                <p className={styles.container}><strong>Rua:</strong> {objEnd[0].rua}</p>
+                                <p className={styles.container}><strong>Nº:</strong> {objEnd[0].num}</p>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+        </main>
     )
 }
 
