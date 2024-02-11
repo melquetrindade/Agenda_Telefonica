@@ -4,6 +4,7 @@ import styles from '../styles/edit_contacts.module.css'
 import {notification, message} from 'antd'
 
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -31,9 +32,6 @@ export default function DeleteContacts(){
         dadosEndereco: undefined,
         statusEndereco: 'load'
     })
-
-    //const [states, setStates] = useState('load')
-    //console.log(`estado: ${states}`)
 
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
@@ -90,7 +88,7 @@ export default function DeleteContacts(){
     }
 
     const carregaContato = async () => {
-        //console.log('entrou no contato')
+        console.log('entrou no contato')
         try {
             const response = await fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
                 method: 'GET',
@@ -136,7 +134,7 @@ export default function DeleteContacts(){
     }
 
     const carregaTelefone = async () => {
-        //console.log('entrou no Telefone')
+        console.log('entrou no Telefone')
         try {
             const response = await fetch(`http://127.0.0.1:8000/telefones/`, {
                 method: 'GET',
@@ -183,7 +181,7 @@ export default function DeleteContacts(){
     }
 
     const carregaEndereco = async () => {
-        //console.log('entrou no Endereco')
+        console.log('entrou no Endereco')
         try {
             const response = await fetch(`http://127.0.0.1:8000/enderecos/`, {
                 method: 'GET',
@@ -271,34 +269,88 @@ export default function DeleteContacts(){
 
         if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
             setInput({
-            nome: inputText,
-            endereco: inputValue.endereco,
-            idade: inputValue.idade
+                nome: inputText,
+                email: inputValue.email,
+                rua: inputValue.rua,
+                bairro: inputValue.bairro,
+                cidade: inputValue.cidade,
+                num: inputValue.num
             })
         }
     }
 
-    const handleChangeAddress = (e) => {
+    const handleChangeRoad = (e) => {
         const inputText = e.target.value
 
         if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
-        setInput({
-            nome: inputValue.nome,
-            endereco: inputText,
-            idade: inputValue.idade
-        })
+            setInput({
+                nome: inputValue.nome,
+                email: inputValue.email,
+                rua: inputText,
+                bairro: inputValue.bairro,
+                cidade: inputValue.cidade,
+                num: inputValue.num
+            })
         }
     }
 
-    const handleChangeAge = (e) => {
+    const handleChangeReighborhood = (e) => {
         const inputText = e.target.value
 
-        if (/^[0-9']+$/.test(inputText) || inputText === '') {
-        setInput({
-            nome: inputValue.nome,
-            endereco: inputValue.endereco,
-            idade: inputText
-        })
+        if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
+            setInput({
+                nome: inputValue.nome,
+                email: inputValue.email,
+                rua: inputValue.rua,
+                bairro: inputText,
+                cidade: inputValue.cidade,
+                num: inputValue.num
+            })
+        }
+    }
+
+    const handleChangeCity = (e) => {
+        const inputText = e.target.value
+
+        if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
+            setInput({
+                nome: inputValue.nome,
+                email: inputValue.email,
+                rua: inputValue.rua,
+                bairro: inputValue.bairro,
+                cidade: inputText,
+                num: inputValue.num
+            })
+        }
+    }
+
+    const handleChangeNumber = (e) => {
+        const inputText = e.target.value
+
+        if (/^[A-Z 0-9']+$/.test(inputText) || inputText === '') {
+            setInput({
+                nome: inputValue.nome,
+                email: inputValue.email,
+                rua: inputValue.rua,
+                bairro: inputValue.bairro,
+                cidade: inputValue.cidade,
+                num: inputText
+            })
+        }
+    }
+
+    const handleChangeEmail = (e) => {
+        const inputText = e.target.value
+
+        if (/^[a-zA-Z 0-9 @ . ']+$/.test(inputText) || inputText === '') {
+            setInput({
+                nome: inputValue.nome,
+                email: inputText,
+                rua: inputValue.rua,
+                bairro: inputValue.bairro,
+                cidade: inputValue.cidade,
+                num: inputValue.num
+            })
         }
     }
 
@@ -322,7 +374,23 @@ export default function DeleteContacts(){
                 ?
                     <Error/>
                 :
-                    <h1>teste</h1>
+                <Forms
+                    context01={contextHolder}
+                    context02={contextHolder2}
+                    changeName={handleChangeName}
+                    changeEmail={handleChangeEmail}
+                    changeRoad={handleChangeRoad}
+                    changeReigh={handleChangeReighborhood}
+                    changeCity={handleChangeCity}
+                    changeNumber={handleChangeNumber}
+                    nome={inputValue.nome}
+                    email={inputValue.email}
+                    rua={inputValue.rua}
+                    bairro={inputValue.bairro}
+                    cidade={inputValue.city}
+                    num={inputValue.num}
+                    func={formatData}
+                />
             }
         </main>
     )
@@ -340,58 +408,132 @@ export default function DeleteContacts(){
                         func={formatData}
                     />
 */
-function Forms({context01, context02, changeName, changeAge, changeAddress, nome, idade, endereco, func}){
+function Forms({
+        context01, 
+        context02, 
+        changeName, 
+        changeEmail, 
+        changeRoad,
+        changeReigh,
+        changeCity,
+        changeNumber,
+        nome, 
+        email,
+        rua,
+        bairro,
+        cidade,
+        num,
+        func
+    }){
     return(
         <>
             {context01}
             {context02}
             <h1>Página de Criar Contatos</h1>
             <hr></hr>
-            <Form>
-                <Row className="mb-3">
-                    <Form.Group as={Col} controlId="formGridName">
-                    <Form.Label>Nome</Form.Label>
-                    <Form.Control 
-                    type="text" 
-                    placeholder="Fulano de Tal" 
-                    required 
-                    minLength="1" 
-                    maxlength="250"
-                    onChange={changeName}
-                    value={nome}
-                    />
-                    </Form.Group>
+            <Container>
+                <Row>
+                    <Col>
+                        <h1>Contato</h1>
+                        <Form>
+                            <Form.Group controlId="formGridName">
+                            <Form.Label>Nome</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="Fulano de Tal" 
+                                required 
+                                minLength="1" 
+                                maxlength="250"
+                                onChange={changeName}
+                                value={nome}
+                            />
+                            </Form.Group>
+        
+                            <Form.Group controlId="formGridEmail">
+                            <Form.Label>E-mail</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="fulado@gmail.com" 
+                                required 
+                                minLength="1" 
+                                maxlength="250"
+                                onChange={changeEmail}
+                                value={email}
+                            />
+                            </Form.Group>
+                        </Form>
+                    </Col>
 
-                    <Form.Group as={Col} controlId="formGridAge">
-                    <Form.Label>Idade</Form.Label>
-                    <Form.Control 
-                    type="text" 
-                    placeholder="18" 
-                    required 
-                    minLength="1" 
-                    maxlength="3"
-                    onChange={changeAge}
-                    value={idade}
-                    />
-                    </Form.Group>
+                    <Col>
+                        <h1>Telefones</h1>
+                        <div>
+                            <div>Número 1: 998113464</div>
+                            <div>Número 2: 998113363</div>
+                        </div>
+                    </Col>
                 </Row>
 
-                <Form.Group className="mb-3" controlId="formGridAddress">
-                    <Form.Label>Endereço</Form.Label>
-                    <Form.Control 
-                    placeholder="Rua da Água" 
-                    required 
-                    minLength="1" 
-                    maxlength="250"
-                    value={endereco}
-                    onChange={changeAddress}
-                    />
-                </Form.Group>
+                <Row>
+                    <h1>Endereço</h1>
+                    <Form>
+                        <Row>
+                            <Form.Group as={Col} controlId="formGridCity">
+                            <Form.Label>Cidade</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="Rio de Janeiro" 
+                                required 
+                                minLength="1" 
+                                maxlength="250"
+                                onChange={changeCity}
+                                value={cidade}
+                            />
+                            </Form.Group>
+    
+                            <Form.Group as={Col} controlId="formGridReigh">
+                            <Form.Label>Bairro</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="Centro" 
+                                required 
+                                minLength="1" 
+                                maxlength="250"
+                                onChange={changeReigh}
+                                value={bairro}
+                            />
+                            </Form.Group>
+                        </Row>
 
-                <Button variant="primary" onClick={func}>
-                    Salvar Alterações
-                </Button>
-            </Form>
+                        <Row>
+                            <Form.Group as={Col} controlId="formGridRoad">
+                            <Form.Label>Rua</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="7 de Setembro" 
+                                required 
+                                minLength="1" 
+                                maxlength="250"
+                                onChange={changeRoad}
+                                value={rua}
+                            />
+                            </Form.Group>
+    
+                            <Form.Group as={Col} controlId="formGridNumber">
+                            <Form.Label>Nº</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="10" 
+                                required 
+                                minLength="1" 
+                                maxlength="250"
+                                onChange={changeNumber}
+                                value={num}
+                            />
+                            </Form.Group>
+                        </Row>
+                    </Form>
+                </Row>
+            </Container>
         </>
     )
 }
