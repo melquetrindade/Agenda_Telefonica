@@ -8,12 +8,14 @@ import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
-export default function DeleteContacts(){
+export default function EditContacts(){
 
     const router = useRouter()
-    const { id } = router.query
-    console.log(`id: ${id}`)
+    const { id, dados } = router.query
+    console.log(`id: ${id} - dados: ${dados}`)
 
     const [inputValue, setInput] = useState({
         nome: '',
@@ -24,6 +26,7 @@ export default function DeleteContacts(){
         num: ''
     })
 
+    /*
     const [objts, setObjts] = useState({
         dadosContato: undefined,
         statusContato: 'load',
@@ -31,7 +34,7 @@ export default function DeleteContacts(){
         statusTelefone: 'load',
         dadosEndereco: undefined,
         statusEndereco: 'load'
-    })
+    })*/
 
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
@@ -61,6 +64,12 @@ export default function DeleteContacts(){
         }, 1000);
     };
 
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            Adicionar Novo Contato
+        </Tooltip>
+    );
+
     const formatData = () => {
 
         const registerData = {
@@ -87,6 +96,7 @@ export default function DeleteContacts(){
         //console.log(document.getElementById('formGridAddress').value)
     }
 
+    /*
     const carregaContato = async () => {
         console.log('entrou no contato')
         try {
@@ -122,6 +132,7 @@ export default function DeleteContacts(){
 
         } catch (error) {
             console.error('Erro na requisição da API:', error.message);
+            
             setObjts({
                 dadosContato: undefined,
                 statusContato: 'erro',
@@ -169,6 +180,7 @@ export default function DeleteContacts(){
 
         } catch (error) {
             console.error('Erro na requisição da API:', error.message);
+            
             setObjts({
                 dadosContato: objts.dadosContato,
                 statusContato: objts.statusContato,
@@ -216,6 +228,7 @@ export default function DeleteContacts(){
 
         } catch (error) {
             console.error('Erro na requisição da API:', error.message);
+            
             setObjts({
                 dadosContato: objts.dadosContato,
                 statusContato: objts.statusContato,
@@ -235,7 +248,7 @@ export default function DeleteContacts(){
     }
     if(objts.dadosEndereco == undefined && objts.statusEndereco == 'load' && id != undefined){
         carregaEndereco()
-    }
+    }*/
 
     const editaDados = async ({objData}) => {
         openMessage()
@@ -354,17 +367,32 @@ export default function DeleteContacts(){
         }
     }
 
+    /*
     if(objts.statusContato == 'ok' && objts.statusTelefone == 'ok' && objts.statusEndereco == 'ok'){
+        
         console.log('dados do contato:')
         console.log(objts.dadosContato)
         console.log('dados do telefone:')
         console.log(objts.dadosTelefone)
         console.log('dados do endereço:')
         console.log(objts.dadosEndereco)
-    }
+        setInput({
+            nome: objts.dadosContato.nome,
+            email: objts.dadosContato.email,
+            rua: objts.dadosEndereco.rua,
+            bairro: objts.dadosEndereco.bairro,
+            cidade: objts.dadosEndereco.cidade,
+            num: objts.dadosEndereco.num
+        })
+    }*/
 
     return(
-        <main className={styles.main}>
+        <h1>Teste</h1>
+    )
+}
+
+/*
+<main className={styles.main}>
             {
                 objts.statusContato == 'load' || objts.statusEndereco == 'load' || objts.statusTelefone == 'load'
                 ?
@@ -390,24 +418,12 @@ export default function DeleteContacts(){
                     cidade={inputValue.city}
                     num={inputValue.num}
                     func={formatData}
+                    funcRender={renderTooltip}
                 />
             }
         </main>
-    )
-}
-/*
-<Forms
-                        context01={contextHolder}
-                        context02={contextHolder2}
-                        changeName={handleChangeName}
-                        changeAge={handleChangeAge}
-                        changeAddress={handleChangeAddress}
-                        nome={inputValue.nome}
-                        idade={inputValue.idade}
-                        endereco={inputValue.endereco}
-                        func={formatData}
-                    />
 */
+
 function Forms({
         context01, 
         context02, 
@@ -423,19 +439,20 @@ function Forms({
         bairro,
         cidade,
         num,
-        func
+        func,
+        funcRender
     }){
     return(
-        <>
+        <div className={styles.body}>
             {context01}
             {context02}
             <h1>Página de Criar Contatos</h1>
             <hr></hr>
             <Container>
-                <Row>
+                <Row className={styles.rowTop}>
                     <Col>
-                        <h1>Contato</h1>
-                        <Form>
+                        <h1 style={{fontWeight: '300'}}>Contato</h1>
+                        <Form className={styles.formContato}>
                             <Form.Group controlId="formGridName">
                             <Form.Label>Nome</Form.Label>
                             <Form.Control 
@@ -465,8 +482,24 @@ function Forms({
                     </Col>
 
                     <Col>
-                        <h1>Telefones</h1>
-                        <div>
+                        <h1 style={{fontWeight: '300', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                            Telefones 
+                            
+                            <OverlayTrigger
+                                placement="right"
+                                delay={{ show: 250, hide: 400 }}
+                                overlay={funcRender}
+                                >
+                                <Button variant="success"><span class="material-symbols-outlined">add</span></Button>
+                            </OverlayTrigger>
+                        </h1>
+                        <div className={styles.formTelefone}>
+                            <div>Número 1: 998113464</div>
+                            <div>Número 2: 998113363</div>
+                            <div>Número 1: 998113464</div>
+                            <div>Número 2: 998113363</div>
+                            <div>Número 1: 998113464</div>
+                            <div>Número 2: 998113363</div>
                             <div>Número 1: 998113464</div>
                             <div>Número 2: 998113363</div>
                         </div>
@@ -474,8 +507,8 @@ function Forms({
                 </Row>
 
                 <Row>
-                    <h1>Endereço</h1>
-                    <Form>
+                    <h1 style={{fontWeight: '300'}}>Endereço</h1>
+                    <Form className={styles.formEndereco}>
                         <Row>
                             <Form.Group as={Col} controlId="formGridCity">
                             <Form.Label>Cidade</Form.Label>
@@ -534,9 +567,15 @@ function Forms({
                     </Form>
                 </Row>
             </Container>
-        </>
+        </div>
     )
 }
+
+/*
+<div className={styles.buttonAdd}>
+                                <span class="material-symbols-outlined">add</span>Adicionar Número
+                            </div>
+*/
 
 function Load(){
     return(

@@ -1,18 +1,57 @@
 @charset "UTF-8";
 
-.main{
-  max-width: 91.9vw;
+.fade{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
 
-.fade{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-  }
+.main{
+  margin-top: 1rem;
+  max-width: 98.9vw;
+}
+
+.body{
+  width: 60vw;
+}
+
+.formContato, .formTelefone, .formEndereco{
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.formTelefone{
+  max-height: 10.1rem;
+  overflow-y: auto;
+}
+
+.rowTop{
+  margin-bottom: 1rem;
+}
+
+.buttonAdd{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  height: 2rem;
+  padding: 4px;
+  border-radius: 10px;
+  background-color: rgb(45, 239, 10);
+  transition: 0.3s;
+}
+
+.buttonAdd:hover{
+  cursor: pointer;
+  background-color: rgb(127, 255, 104);
+}

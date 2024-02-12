@@ -105,7 +105,7 @@ export default function DeleteContacts(){
 
     const navPagEdit = ({idContato}) => {
         router.push({
-            pathname: './edit_contacts',
+            pathname: './loadData',
             query: {id: idContato}
         })
     }
@@ -116,10 +116,10 @@ export default function DeleteContacts(){
         })
     }
 
-    const navPagDetails = async ({idContato, nomeContato}) => {
+    const navPagDetails = ({idContato}) => {
         router.push({
             pathname: './details_contacts',
-            query: {id: idContato, nome: nomeContato}
+            query: {id: idContato}
         })
     }
 
@@ -164,7 +164,7 @@ function Listar({data, func, funcEdit, funcCreate, funcDetails}){
                                     <Card.Title className={styles.name}>{contato.nome}</Card.Title>
                                     <hr></hr>
                                     <div className={styles.containerButtons}>
-                                        <Button variant="outline-dark" size="sm" onClick={() => funcDetails({idContato: contato.id, nomeContato: contato.nome})}>
+                                        <Button variant="outline-dark" size="sm" onClick={() => funcDetails({idContato: contato.id})}>
                                             Detalhes<span class="material-symbols-outlined">person</span>
                                         </Button>
                                         <Button variant="outline-primary" size="sm" onClick={() => funcEdit({idContato: contato.id})}>
