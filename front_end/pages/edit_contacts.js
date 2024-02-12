@@ -14,27 +14,27 @@ import Tooltip from 'react-bootstrap/Tooltip';
 export default function EditContacts(){
 
     const router = useRouter()
-    const { id, dados } = router.query
-    console.log(`id: ${id} - dados: ${dados}`)
+    const { id} = router.query
+    console.log(`id: ${id}`)
 
-    const [inputValue, setInput] = useState({
+    const [objContato, setContato] = useState({
         nome: '',
         email: '',
+        status: 'load'
+    })
+
+    const [objEndereco, setEndereco] = useState({
         rua: '',
         bairro: '',
         cidade: '',
-        num: ''
+        num: '',
+        status: 'load'
     })
 
-    /*
-    const [objts, setObjts] = useState({
-        dadosContato: undefined,
-        statusContato: 'load',
-        dadosTelefone: undefined,
-        statusTelefone: 'load',
-        dadosEndereco: undefined,
-        statusEndereco: 'load'
-    })*/
+    const [objTelefone, setTelefone] = useState({
+        dados: undefined,
+        status: 'load'
+    })
 
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
@@ -96,9 +96,7 @@ export default function EditContacts(){
         //console.log(document.getElementById('formGridAddress').value)
     }
 
-    /*
     const carregaContato = async () => {
-        console.log('entrou no contato')
         try {
             const response = await fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
                 method: 'GET',
@@ -108,44 +106,32 @@ export default function EditContacts(){
             });
             
             if (!response.ok) {
-                setObjts({
-                    dadosContato: undefined,
-                    statusContato: 'erro',
-                    dadosTelefone: objts.dadosTelefone,
-                    statusTelefone: objts.statusTelefone,
-                    dadosEndereco: objts.dadosEndereco,
-                    statusEndereco: objts.statusEndereco
+                setContato({
+                    nome: undefined,
+                    email: undefined,
+                    status: 'erro'
                 })
             }
 
             const data = await response.json();
-            //console.log(data)
             
-            setObjts({
-                dadosContato: data,
-                statusContato: 'ok',
-                dadosTelefone: objts.dadosTelefone,
-                statusTelefone: objts.statusTelefone,
-                dadosEndereco: objts.dadosEndereco,
-                statusEndereco: objts.statusEndereco
+            setContato({
+                nome: data.nome,
+                email: data.email,
+                status: 'ok'
             })
 
         } catch (error) {
             console.error('Erro na requisição da API:', error.message);
-            
-            setObjts({
-                dadosContato: undefined,
-                statusContato: 'erro',
-                dadosTelefone: objts.dadosTelefone,
-                statusTelefone: objts.statusTelefone,
-                dadosEndereco: objts.dadosEndereco,
-                statusEndereco: objts.statusEndereco
+            setContato({
+                nome: undefined,
+                email: undefined,
+                status: 'erro'
             })
         }
     }
 
     const carregaTelefone = async () => {
-        console.log('entrou no Telefone')
         try {
             const response = await fetch(`http://127.0.0.1:8000/telefones/`, {
                 method: 'GET',
@@ -155,45 +141,30 @@ export default function EditContacts(){
             });
             
             if (!response.ok) {
-                setObjts({
-                    dadosContato: objts.dadosContato,
-                    statusContato: objts.statusContato,
-                    dadosTelefone: undefined,
-                    statusTelefone: 'erro',
-                    dadosEndereco: objts.dadosEndereco,
-                    statusEndereco: objts.statusEndereco
+                setTelefone({
+                    dados: undefined,
+                    status: 'erro'
                 })
             }
 
             const data = await response.json();
             var filterData = data.filter(item => item.owner == id)
-            //console.log(data)
-
-            setObjts({
-                dadosContato: objts.dadosContato,
-                statusContato: objts.statusContato,
-                dadosTelefone: filterData,
-                statusTelefone: 'ok',
-                dadosEndereco: objts.dadosEndereco,
-                statusEndereco: objts.statusEndereco
+           
+            setTelefone({
+                dados: filterData,
+                status: 'ok'
             })
 
         } catch (error) {
             console.error('Erro na requisição da API:', error.message);
-            
-            setObjts({
-                dadosContato: objts.dadosContato,
-                statusContato: objts.statusContato,
-                dadosTelefone: undefined,
-                statusTelefone: 'erro',
-                dadosEndereco: objts.dadosEndereco,
-                statusEndereco: objts.statusEndereco
+            setTelefone({
+                dados: undefined,
+                status: 'erro'
             })
         }
     }
 
     const carregaEndereco = async () => {
-        console.log('entrou no Endereco')
         try {
             const response = await fetch(`http://127.0.0.1:8000/enderecos/`, {
                 method: 'GET',
@@ -203,52 +174,47 @@ export default function EditContacts(){
             });
             
             if (!response.ok) {
-                setObjts({
-                    dadosContato: objts.dadosContato,
-                    statusContato: objts.statusContato,
-                    dadosTelefone: objts.dadosTelefone,
-                    statusTelefone: objts.statusTelefone,
-                    dadosEndereco: undefined,
-                    statusEndereco: 'erro'
+                setEndereco({
+                    rua: undefined,
+                    bairro: undefined,
+                    cidade: undefined,
+                    num: undefined,
+                    status: 'erro'
                 })
             }
 
             const data = await response.json();
             var filterData = data.filter(item => item.contato == id)
-            //console.log(data)
             
-            setObjts({
-                dadosContato: objts.dadosContato,
-                statusContato: objts.statusContato,
-                dadosTelefone: objts.dadosTelefone,
-                statusTelefone: objts.statusTelefone,
-                dadosEndereco: filterData,
-                statusEndereco: 'ok'
+            setEndereco({
+                rua: filterData[0].rua,
+                bairro: filterData[0].bairro,
+                cidade: filterData[0].cidade,
+                num: filterData[0].num,
+                status: 'ok'
             })
 
         } catch (error) {
             console.error('Erro na requisição da API:', error.message);
-            
-            setObjts({
-                dadosContato: objts.dadosContato,
-                statusContato: objts.statusContato,
-                dadosTelefone: objts.dadosTelefone,
-                statusTelefone: objts.statusTelefone,
-                dadosEndereco: undefined,
-                statusEndereco: 'erro'
+            setEndereco({
+                rua: undefined,
+                bairro: undefined,
+                cidade: undefined,
+                num: undefined,
+                status: 'erro'
             })
         }
     }
 
-    if(objts.dadosContato == undefined && objts.statusContato == 'load' && id != undefined){
+    if(objContato.status == 'load' && id != undefined && objTelefone.status == 'load' && objEndereco.status == 'load'){
         carregaContato()
     }
-    if(objts.dadosTelefone == undefined && objts.statusTelefone == 'load' && id != undefined){
+    if(objTelefone.status == 'load' && id != undefined && objContato.status != 'load' && objEndereco.status == 'load'){
         carregaTelefone()
     }
-    if(objts.dadosEndereco == undefined && objts.statusEndereco == 'load' && id != undefined){
+    if(objEndereco.status == 'load' && id != undefined && objContato.status != 'load' && objTelefone.status != 'load'){
         carregaEndereco()
-    }*/
+    }
 
     const editaDados = async ({objData}) => {
         openMessage()
@@ -281,13 +247,10 @@ export default function EditContacts(){
         const inputText = e.target.value
 
         if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
-            setInput({
+            setContato({
                 nome: inputText,
-                email: inputValue.email,
-                rua: inputValue.rua,
-                bairro: inputValue.bairro,
-                cidade: inputValue.cidade,
-                num: inputValue.num
+                email: objContato.email,
+                status: objContato.status
             })
         }
     }
@@ -296,13 +259,12 @@ export default function EditContacts(){
         const inputText = e.target.value
 
         if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
-            setInput({
-                nome: inputValue.nome,
-                email: inputValue.email,
+            setEndereco({
                 rua: inputText,
-                bairro: inputValue.bairro,
-                cidade: inputValue.cidade,
-                num: inputValue.num
+                bairro: objEndereco.bairro,
+                cidade: objEndereco.cidade,
+                num: objEndereco.num,
+                status: objEndereco.status
             })
         }
     }
@@ -311,13 +273,12 @@ export default function EditContacts(){
         const inputText = e.target.value
 
         if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
-            setInput({
-                nome: inputValue.nome,
-                email: inputValue.email,
-                rua: inputValue.rua,
+            setEndereco({
+                rua: objEndereco.rua,
                 bairro: inputText,
-                cidade: inputValue.cidade,
-                num: inputValue.num
+                cidade: objEndereco.cidade,
+                num: objEndereco.num,
+                status: objEndereco.status
             })
         }
     }
@@ -326,13 +287,12 @@ export default function EditContacts(){
         const inputText = e.target.value
 
         if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
-            setInput({
-                nome: inputValue.nome,
-                email: inputValue.email,
-                rua: inputValue.rua,
-                bairro: inputValue.bairro,
+            setEndereco({
+                rua: objEndereco.rua,
+                bairro: objEndereco.bairro,
                 cidade: inputText,
-                num: inputValue.num
+                num: objEndereco.num,
+                status: objEndereco.status
             })
         }
     }
@@ -341,13 +301,12 @@ export default function EditContacts(){
         const inputText = e.target.value
 
         if (/^[A-Z 0-9']+$/.test(inputText) || inputText === '') {
-            setInput({
-                nome: inputValue.nome,
-                email: inputValue.email,
-                rua: inputValue.rua,
-                bairro: inputValue.bairro,
-                cidade: inputValue.cidade,
-                num: inputText
+            setEndereco({
+                rua: objEndereco.rua,
+                bairro: objEndereco.bairro,
+                cidade: objEndereco.cidade,
+                num: inputText,
+                status: objEndereco.status
             })
         }
     }
@@ -356,49 +315,22 @@ export default function EditContacts(){
         const inputText = e.target.value
 
         if (/^[a-zA-Z 0-9 @ . ']+$/.test(inputText) || inputText === '') {
-            setInput({
-                nome: inputValue.nome,
+            setContato({
+                nome: objContato.nome,
                 email: inputText,
-                rua: inputValue.rua,
-                bairro: inputValue.bairro,
-                cidade: inputValue.cidade,
-                num: inputValue.num
+                status: objContato.status
             })
         }
     }
 
-    /*
-    if(objts.statusContato == 'ok' && objts.statusTelefone == 'ok' && objts.statusEndereco == 'ok'){
-        
-        console.log('dados do contato:')
-        console.log(objts.dadosContato)
-        console.log('dados do telefone:')
-        console.log(objts.dadosTelefone)
-        console.log('dados do endereço:')
-        console.log(objts.dadosEndereco)
-        setInput({
-            nome: objts.dadosContato.nome,
-            email: objts.dadosContato.email,
-            rua: objts.dadosEndereco.rua,
-            bairro: objts.dadosEndereco.bairro,
-            cidade: objts.dadosEndereco.cidade,
-            num: objts.dadosEndereco.num
-        })
-    }*/
-
     return(
-        <h1>Teste</h1>
-    )
-}
-
-/*
-<main className={styles.main}>
+        <main className={styles.main}>
             {
-                objts.statusContato == 'load' || objts.statusEndereco == 'load' || objts.statusTelefone == 'load'
+                objContato.status == 'load' || objTelefone.status == 'load' || objEndereco.status == 'load'
                 ?
                     <Load/>
                 :
-                objts.statusContato == 'erro' || objts.statusEndereco == 'erro' || objts.statusTelefone == 'erro'
+                objContato.status == 'erro' || objTelefone.status == 'erro' || objEndereco.status == 'erro'
                 ?
                     <Error/>
                 :
@@ -411,18 +343,19 @@ export default function EditContacts(){
                     changeReigh={handleChangeReighborhood}
                     changeCity={handleChangeCity}
                     changeNumber={handleChangeNumber}
-                    nome={inputValue.nome}
-                    email={inputValue.email}
-                    rua={inputValue.rua}
-                    bairro={inputValue.bairro}
-                    cidade={inputValue.city}
-                    num={inputValue.num}
+                    nome={objContato.nome}
+                    email={objContato.email}
+                    rua={objEndereco.rua}
+                    bairro={objEndereco.bairro}
+                    cidade={objEndereco.cidade}
+                    num={objEndereco.num}
                     func={formatData}
                     funcRender={renderTooltip}
                 />
             }
         </main>
-*/
+    )
+}
 
 function Forms({
         context01, 
@@ -571,12 +504,6 @@ function Forms({
     )
 }
 
-/*
-<div className={styles.buttonAdd}>
-                                <span class="material-symbols-outlined">add</span>Adicionar Número
-                            </div>
-*/
-
 function Load(){
     return(
         <div className={styles.fade}>
@@ -592,59 +519,3 @@ function Error(){
         <h1>Error</h1>
     )
 }
-
-/*
-return(
-        <main className={styles.main}>
-            {contextHolder}
-            {contextHolder2}
-            <h1>Página de Criar Contatos</h1>
-            <hr></hr>
-            <Form>
-                <Row className="mb-3">
-                    <Form.Group as={Col} controlId="formGridName">
-                    <Form.Label>Nome</Form.Label>
-                    <Form.Control 
-                    type="text" 
-                    placeholder="Fulano de Tal" 
-                    required 
-                    minLength="1" 
-                    maxlength="250"
-                    onChange={handleChangeName}
-                    value={inputValue.nome}
-                    />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridAge">
-                    <Form.Label>Idade</Form.Label>
-                    <Form.Control 
-                    type="text" 
-                    placeholder="18" 
-                    required 
-                    minLength="1" 
-                    maxlength="3"
-                    onChange={handleChangeAge}
-                    value={inputValue.idade}
-                    />
-                    </Form.Group>
-                </Row>
-
-                <Form.Group className="mb-3" controlId="formGridAddress">
-                    <Form.Label>Endereço</Form.Label>
-                    <Form.Control 
-                    placeholder="Rua da Água" 
-                    required 
-                    minLength="1" 
-                    maxlength="250"
-                    value={inputValue.endereco}
-                    onChange={handleChangeAddress}
-                    />
-                </Form.Group>
-
-                <Button variant="primary" onClick={formatData}>
-                    Cadastrar
-                </Button>
-            </Form>
-        </main>
-    )
-*/
