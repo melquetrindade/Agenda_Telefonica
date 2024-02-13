@@ -72,28 +72,43 @@ export default function EditContacts(){
 
     const formatData = () => {
 
-        const registerData = {
+        const dataContato = {
             nome: document.getElementById('formGridName').value,
-            endereco: document.getElementById('formGridAddress').value,
-            idade: document.getElementById('formGridAge').value,
+            email: document.getElementById('formGridEmail').value,
         };
 
-        if(!registerData.nome){
-            openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+        const dataEndereco = {
+            rua: document.getElementById('formGridRoad').value,
+            bairro: document.getElementById('formGridReigh').value,
+            cidade: document.getElementById('formGridCity').value,
+            num: document.getElementById('formGridNumber').value,
+        };
+
+        var ok = true
+
+        try{
+            Object.keys(dataContato).forEach(key => {
+                //console.log(key + ': ' + dataContato[key]);
+    
+                if(!dataContato[key]){
+                    console.log('não tem value')
+                    ok = false
+                    openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+                    throw new Error('StopIteration');
+                    
+                }
+                console.log(`${key}: ok`)
+                
+            });
+        } catch(error){
+            if (error.message !== 'StopIteration') {
+                throw error;
+            }
         }
-        else if(!registerData.endereco){
-            openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+
+        if(ok){
+            console.log('chama a função')
         }
-        else if(!registerData.idade){
-            openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
-        }
-        else{
-            console.log('chama função de cadastrar')
-            editaDados({objData: registerData})
-        }
-        //console.log(document.getElementById('formGridName').value)
-        //console.log(document.getElementById('formGridAge').value)
-        //console.log(document.getElementById('formGridAddress').value)
     }
 
     const carregaContato = async () => {
@@ -351,6 +366,7 @@ export default function EditContacts(){
                     num={objEndereco.num}
                     func={formatData}
                     funcRender={renderTooltip}
+                    objPhone={objTelefone.dados}
                 />
             }
         </main>
@@ -373,7 +389,8 @@ function Forms({
         cidade,
         num,
         func,
-        funcRender
+        funcRender,
+        objPhone
     }){
     return(
         <div className={styles.body}>
@@ -383,7 +400,7 @@ function Forms({
             <hr></hr>
             <Container>
                 <Row className={styles.rowTop}>
-                    <Col>
+                    <Col className={styles.colOne}>
                         <h1 style={{fontWeight: '300'}}>Contato</h1>
                         <Form className={styles.formContato}>
                             <Form.Group controlId="formGridName">
@@ -427,14 +444,11 @@ function Forms({
                             </OverlayTrigger>
                         </h1>
                         <div className={styles.formTelefone}>
-                            <div>Número 1: 998113464</div>
-                            <div>Número 2: 998113363</div>
-                            <div>Número 1: 998113464</div>
-                            <div>Número 2: 998113363</div>
-                            <div>Número 1: 998113464</div>
-                            <div>Número 2: 998113363</div>
-                            <div>Número 1: 998113464</div>
-                            <div>Número 2: 998113363</div>
+                            {
+                                objPhone.map((item) => (
+                                    <div onClick={func}>{item.telefone}<span class="material-symbols-outlined">edit</span></div>
+                                ))
+                            }
                         </div>
                     </Col>
                 </Row>
@@ -500,6 +514,9 @@ function Forms({
                     </Form>
                 </Row>
             </Container>
+            <Button variant="success" size="sm" onClick={func}>
+                Salvar Alterações<span class="material-symbols-outlined">check</span>
+            </Button>
         </div>
     )
 }
