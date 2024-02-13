@@ -66,11 +66,12 @@ export default function EditContacts(){
 
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
-            Adicionar Novo Contato
+            Adicionar Novo Telefone
         </Tooltip>
     );
 
-    const formatData = () => {
+    const formatData = ({destino}) => {
+        //console.log(destino)
 
         const dataContato = {
             nome: document.getElementById('formGridName').value,
@@ -78,6 +79,7 @@ export default function EditContacts(){
         };
 
         const dataEndereco = {
+            contato: id,
             rua: document.getElementById('formGridRoad').value,
             bairro: document.getElementById('formGridReigh').value,
             cidade: document.getElementById('formGridCity').value,
@@ -88,16 +90,15 @@ export default function EditContacts(){
 
         try{
             Object.keys(dataContato).forEach(key => {
-                //console.log(key + ': ' + dataContato[key]);
     
                 if(!dataContato[key]){
-                    console.log('não tem value')
+                    //console.log('não tem value')
                     ok = false
                     openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
                     throw new Error('StopIteration');
                     
                 }
-                console.log(`${key}: ok`)
+                //console.log(`${key}: ok`)
                 
             });
         } catch(error){
@@ -107,7 +108,44 @@ export default function EditContacts(){
         }
 
         if(ok){
-            console.log('chama a função')
+            try{
+                Object.keys(dataEndereco).forEach(key => {
+                    //console.log(key + ': ' + dataContato[key]);
+        
+                    if(!dataEndereco[key]){
+                        //console.log('não tem value')
+                        ok = false
+                        openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+                        throw new Error('StopIteration');
+                        
+                    }
+                    //console.log(`${key}: ok`)
+                    
+                });
+            } catch(error){
+                if (error.message !== 'StopIteration') {
+                    throw error;
+                }
+            }
+        }
+        
+
+        if(ok){
+            openMessage()
+            editaContato({objData: dataContato})
+            editaEndereco({objData: dataEndereco})
+            
+            if(destino == 'voltar'){
+                setTimeout(function () {
+                    router.back()
+                }, 2000);
+            }
+            else if(destino == 'editar'){
+                console.log('chama a pag de editar')
+            }
+            else{
+                console.log('chama a pag de criar')
+            }
         }
     }
 
@@ -231,9 +269,8 @@ export default function EditContacts(){
         carregaEndereco()
     }
 
-    const editaDados = async ({objData}) => {
-        openMessage()
-        fetch(contatoUrl, {
+    const editaContato = async ({objData}) => {
+        fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -247,16 +284,36 @@ export default function EditContacts(){
             return response.json();
         })
         .then(data => {
-            openNotification({placement: 'topRight', title: 'Contato Editado', descricao: 'As Alterações foram feitas com Sucesso!'})
-            setTimeout(function () {
-                // Ação que será executada após o tempo específico
-                router.back()
-            }, 2000);
+            
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
         });
     }
+
+    const editaEndereco = async ({objData}) => {
+        fetch(`http://127.0.0.1:8000/enderecos/${id}/`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(objData),
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.log('entrou no erro do edita endereço')
+                throw new Error(`Erro na requisição: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            
+        })
+        .catch(error => {
+            console.error('Erro durante a requisição POST:', error);
+        });
+    }
+
 
     const handleChangeName = (e) => {
         const inputText = e.target.value
@@ -440,13 +497,13 @@ function Forms({
                                 delay={{ show: 250, hide: 400 }}
                                 overlay={funcRender}
                                 >
-                                <Button variant="success"><span class="material-symbols-outlined">add</span></Button>
+                                <Button onClick={() => func({destino: 'criar'})} variant="success"><span class="material-symbols-outlined">add</span></Button>
                             </OverlayTrigger>
                         </h1>
                         <div className={styles.formTelefone}>
                             {
                                 objPhone.map((item) => (
-                                    <div onClick={func}>{item.telefone}<span class="material-symbols-outlined">edit</span></div>
+                                    <div onClick={() => func({destino: 'editar'})}>{item.telefone}<span class="material-symbols-outlined">edit</span></div>
                                 ))
                             }
                         </div>
@@ -514,7 +571,7 @@ function Forms({
                     </Form>
                 </Row>
             </Container>
-            <Button variant="success" size="sm" onClick={func}>
+            <Button variant="success" size="sm" onClick={() => func({destino: 'voltar'})}>
                 Salvar Alterações<span class="material-symbols-outlined">check</span>
             </Button>
         </div>
