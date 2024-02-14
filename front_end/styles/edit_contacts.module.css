@@ -19,7 +19,7 @@
 }
 
 .body{
-  width: 60vw;
+  width: 50vw;
 }
 
 .formContato, .formTelefone, .formEndereco{
@@ -101,9 +101,19 @@
   background-color: rgb(127, 255, 104);
 }
 
-.body > Button{
+.contButtons{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.contButtons > Button{
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 20px;
+}
+
+.contButtons span{
+  margin-left: 10px;
 }

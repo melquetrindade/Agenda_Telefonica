@@ -14,7 +14,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 export default function EditContacts(){
 
     const router = useRouter()
-    const { id} = router.query
+    const { id } = router.query
     console.log(`id: ${id}`)
 
     const [objContato, setContato] = useState({
@@ -128,8 +128,10 @@ export default function EditContacts(){
             if(destino == 'voltar'){
                 openMessage()
                 setTimeout(function () {
-                    router.back()
-                }, 2000);
+                    router.push({
+                        pathname: './contacts'
+                    })
+                }, 1500);
             }
             else if(destino == 'editar'){
                 router.push({
@@ -253,10 +255,10 @@ export default function EditContacts(){
         }
     }
 
-    if(objContato.status == 'load' && id != undefined && objTelefone.status == 'load' && objEndereco.status == 'load'){
+    if(objContato.status == 'load' && id != undefined){
         carregaContato()
     }
-    if(objTelefone.status == 'load' && id != undefined && objContato.status != 'load' && objEndereco.status == 'load'){
+    if(objTelefone.status == 'load' && id != undefined && objContato.status != 'load'){
         carregaTelefone()
     }
     if(objEndereco.status == 'load' && id != undefined && objContato.status != 'load' && objTelefone.status != 'load'){
@@ -389,6 +391,40 @@ export default function EditContacts(){
         }
     }
 
+    const deleteNumber = async ({idNumber}) => {
+        openMessage()
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/telefones/${idNumber}/`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+            
+            if (!response.ok) {
+              openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Erro ao Deletar o Contato!'})
+            }
+            setTimeout(function () {
+                setTelefone({
+                    dados: undefined,
+                    status: 'load'
+                })
+            }, 1500);
+
+        } catch (error) {
+            openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Erro ao Deletar o Contato!'})
+        }
+    }
+
+    const cancelOperation = () => {
+        openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'As Alterações Foram Canceladas!'})
+        setTimeout(function () {
+            router.push({
+                pathname: './contacts'
+            })
+        }, 1500)
+    }
+
     return(
         <main className={styles.main}>
             {
@@ -418,6 +454,8 @@ export default function EditContacts(){
                     func={formatData}
                     funcRender={renderTooltip}
                     objPhone={objTelefone.dados}
+                    funcDeleteneNum={deleteNumber}
+                    funcCancel={cancelOperation}
                 />
             }
         </main>
@@ -441,7 +479,9 @@ function Forms({
         num,
         func,
         funcRender,
-        objPhone
+        objPhone,
+        funcDeleteneNum,
+        funcCancel
     }){
     return(
         <div className={styles.body}>
@@ -502,7 +542,7 @@ function Forms({
 
                                         <div className={styles.spanEdit}><span onClick={() => func({destino: 'editar', num: item.telefone, idNum: item.id})} class="material-symbols-outlined">edit</span></div>
 
-                                        <div className={styles.spanDelete}><span onClick={() => func({destino: 'editar', num: item.telefone, idNum: item.id})} class="material-symbols-outlined">delete</span></div>
+                                        <div className={styles.spanDelete}><span onClick={() => funcDeleteneNum({idNumber: item.id})} class="material-symbols-outlined">delete</span></div>
                                     </div>
                                 ))
                             }
@@ -571,9 +611,16 @@ function Forms({
                     </Form>
                 </Row>
             </Container>
-            <Button variant="success" size="sm" onClick={() => func({destino: 'voltar', num: '', idNum: ''})}>
-                Salvar Alterações<span class="material-symbols-outlined">check</span>
-            </Button>
+
+            <div className={styles.contButtons}>
+                <Button variant="success" size="sm" onClick={() => func({destino: 'voltar', num: '', idNum: ''})}>
+                    Salvar Alterações<span class="material-symbols-outlined">check</span>
+                </Button>
+    
+                <Button variant="danger" size="sm" onClick={funcCancel}>
+                    Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
+                </Button>
+            </div>
         </div>
     )
 }

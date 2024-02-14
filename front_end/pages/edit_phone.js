@@ -70,9 +70,12 @@ export default function EditPhone(){
             return response.json();
         })
         .then(data => {
-            router.push({
-                pathname: './contacts',
-            })
+            setTimeout(function () {
+                router.push({
+                    pathname: './edit_contacts',
+                    query: {id: id}
+                })
+            }, 1500);
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
