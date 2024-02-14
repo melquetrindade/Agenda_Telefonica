@@ -70,7 +70,7 @@ export default function EditContacts(){
         </Tooltip>
     );
 
-    const formatData = ({destino}) => {
+    const formatData = ({destino, num, idNum}) => {
         //console.log(destino)
 
         const dataContato = {
@@ -90,16 +90,12 @@ export default function EditContacts(){
 
         try{
             Object.keys(dataContato).forEach(key => {
-    
                 if(!dataContato[key]){
-                    //console.log('não tem value')
                     ok = false
                     openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
                     throw new Error('StopIteration');
                     
                 }
-                //console.log(`${key}: ok`)
-                
             });
         } catch(error){
             if (error.message !== 'StopIteration') {
@@ -110,17 +106,11 @@ export default function EditContacts(){
         if(ok){
             try{
                 Object.keys(dataEndereco).forEach(key => {
-                    //console.log(key + ': ' + dataContato[key]);
-        
                     if(!dataEndereco[key]){
-                        //console.log('não tem value')
                         ok = false
                         openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
                         throw new Error('StopIteration');
-                        
                     }
-                    //console.log(`${key}: ok`)
-                    
                 });
             } catch(error){
                 if (error.message !== 'StopIteration') {
@@ -131,17 +121,21 @@ export default function EditContacts(){
         
 
         if(ok){
-            openMessage()
+            
             editaContato({objData: dataContato})
             editaEndereco({objData: dataEndereco})
             
             if(destino == 'voltar'){
+                openMessage()
                 setTimeout(function () {
                     router.back()
                 }, 2000);
             }
             else if(destino == 'editar'){
-                console.log('chama a pag de editar')
+                router.push({
+                    pathname: './edit_phone',
+                    query: {id: id, num: num, idNum: idNum}
+                })
             }
             else{
                 console.log('chama a pag de criar')
@@ -497,13 +491,19 @@ function Forms({
                                 delay={{ show: 250, hide: 400 }}
                                 overlay={funcRender}
                                 >
-                                <Button onClick={() => func({destino: 'criar'})} variant="success"><span class="material-symbols-outlined">add</span></Button>
+                                <Button onClick={() => func({destino: 'criar', num: '', idNum: ''})} variant="success"><span class="material-symbols-outlined">add</span></Button>
                             </OverlayTrigger>
                         </h1>
                         <div className={styles.formTelefone}>
                             {
                                 objPhone.map((item) => (
-                                    <div onClick={() => func({destino: 'editar'})}>{item.telefone}<span class="material-symbols-outlined">edit</span></div>
+                                    <div>
+                                        <div className={styles.numero}>{item.telefone}</div>
+
+                                        <div className={styles.spanEdit}><span onClick={() => func({destino: 'editar', num: item.telefone, idNum: item.id})} class="material-symbols-outlined">edit</span></div>
+
+                                        <div className={styles.spanDelete}><span onClick={() => func({destino: 'editar', num: item.telefone, idNum: item.id})} class="material-symbols-outlined">delete</span></div>
+                                    </div>
                                 ))
                             }
                         </div>
@@ -571,7 +571,7 @@ function Forms({
                     </Form>
                 </Row>
             </Container>
-            <Button variant="success" size="sm" onClick={() => func({destino: 'voltar'})}>
+            <Button variant="success" size="sm" onClick={() => func({destino: 'voltar', num: '', idNum: ''})}>
                 Salvar Alterações<span class="material-symbols-outlined">check</span>
             </Button>
         </div>
