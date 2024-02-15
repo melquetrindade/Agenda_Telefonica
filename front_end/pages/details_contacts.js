@@ -248,7 +248,11 @@ function Listar({objTell, objEnd, objCont, nameContato}){
                     </Col>
 
                     <Col>
-                    
+                            <div className={styles.contextContato}>
+                                <h1>Email</h1>
+                                <hr></hr>
+                                <p>{objCont.email}</p>
+                            </div>
                     </Col>
                 </Row>
             </Container>

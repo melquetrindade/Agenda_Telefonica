@@ -36,6 +36,11 @@ export default function EditContacts(){
         status: 'load'
     })
 
+    const [editData, setEditData] = useState({
+        statusCont: false,
+        statusEnd: false
+    })
+
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
         api.info({
@@ -70,6 +75,34 @@ export default function EditContacts(){
         </Tooltip>
     );
 
+    const checksEmail = async ({email}) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/contatos/`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Erro na requisição: ${response.status}`);
+            }
+            //console.log('chegou aqui')
+            const data = await response.json();
+            //console.log(data)
+            var filterData = data.filter(item => item.email == email)
+            //console.log(filterData)
+            
+            if(filterData){
+                //return true
+            }
+            //return false
+
+        } catch (error) {
+            console.error('Erro na requisição da API:', error.message);
+        }
+    }
+
     const formatData = ({destino, num, idNum}) => {
         //console.log(destino)
 
@@ -86,6 +119,8 @@ export default function EditContacts(){
             num: document.getElementById('formGridNumber').value,
         };
 
+        checksEmail({email: dataContato.email})
+    
         var ok = true
 
         try{
@@ -121,31 +156,40 @@ export default function EditContacts(){
         
 
         if(ok){
-            
-            editaContato({objData: dataContato})
-            editaEndereco({objData: dataEndereco})
-            
-            if(destino == 'voltar'){
-                openMessage()
-                setTimeout(function () {
-                    router.push({
-                        pathname: './contacts'
-                    })
-                }, 1500);
+            if(!editData.statusCont){
+                editaContato({objData: dataContato})
             }
-            else if(destino == 'editar'){
-                router.push({
-                    pathname: './edit_phone',
-                    query: {id: id, num: num, idNum: idNum}
-                })
+            if(!editData.statusEnd && editData.statusCont){
+                editaEndereco({objData: dataEndereco})
+            }
+            
+            if(editData.statusCont && editData.statusEnd){
+                if(destino == 'voltar'){
+                    openMessage()
+                    setTimeout(function () {
+                        router.push({
+                            pathname: './contacts'
+                        })
+                    }, 1500);
+                }
+                else if(destino == 'editar'){
+                    router.push({
+                        pathname: './edit_phone',
+                        query: {id: id, num: num, idNum: idNum}
+                    })
+                }
+                else{
+                    console.log('chama a pag de criar')
+                    router.push({
+                        pathname: './create_phone',
+                        query: {id: id}
+                    })
+                }
             }
             else{
-                console.log('chama a pag de criar')
-                router.push({
-                    pathname: './create_phone',
-                    query: {id: id}
-                })
+                openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
             }
+            
         }
     }
 
@@ -279,15 +323,26 @@ export default function EditContacts(){
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Erro na requisição: ${response.status}`);
+                //throw new Error(`Erro na requisição: ${response.status}`);
+                setEditData({
+                    statusCont: false,
+                    statusEnd: editData.statusEnd
+                })
             }
             return response.json();
         })
         .then(data => {
-            
+            setEditData({
+                statusCont: true,
+                statusEnd: editData.statusEnd
+            })
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
+            setEditData({
+                statusCont: false,
+                statusEnd: editData.statusEnd
+            })
         });
     }
 
@@ -301,16 +356,26 @@ export default function EditContacts(){
         })
         .then(response => {
             if (!response.ok) {
-                console.log('entrou no erro do edita endereço')
-                throw new Error(`Erro na requisição: ${response.status}`);
+                //throw new Error(`Erro na requisição: ${response.status}`);
+                setEditData({
+                    statusCont: editData.statusCont,
+                    statusEnd: false
+                })
             }
             return response.json();
         })
         .then(data => {
-            
+            setEditData({
+                statusCont: editData.statusCont,
+                statusEnd: true
+            })
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
+            setEditData({
+                statusCont: editData.statusCont,
+                statusEnd: false
+            })
         });
     }
 
