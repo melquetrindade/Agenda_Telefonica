@@ -1,22 +1,18 @@
 import React, {useState} from "react";
 import { useRouter } from "next/router";
-import styles from '../styles/edit_phone.module.css'
+import styles from '../styles/create_phone.module.css'
 import {notification, message} from 'antd'
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-export default function EditPhone(){
+export default function CreatePhone(){
 
     const router = useRouter()
-    const {id, num, idNum} = router.query
-    console.log(`id: ${id} - num: ${num} - idNum: ${idNum}`)
+    const {id} = router.query
+    console.log(id)
 
-    const [numTell, setNum] = useState(num)
-
-    if(numTell == undefined && num){
-        setNum(num)
-    }
+    const [numTell, setNum] = useState('')
 
     const [api, contextHolder2] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
@@ -62,15 +58,17 @@ export default function EditPhone(){
         }
 
         if(objTell.telefone.length == 9){
-            openMessage()
-            saveNum({objData: objTell})
+            createNum({objData: objTell})
+        }
+        else{
+            openNotification({placement: 'topRight', title: 'Erro', descricao: 'O número deve conter 9 dígitos!'})
         }
 
     }
 
-    const saveNum = async ({objData}) => {
-        fetch(`http://127.0.0.1:8000/telefones/${idNum}/`, {
-        method: 'PUT',
+    const createNum = async ({objData}) => {
+        fetch(`http://127.0.0.1:8000/telefones/`, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -83,6 +81,7 @@ export default function EditPhone(){
             return response.json();
         })
         .then(data => {
+            openMessage()
             setTimeout(function () {
                 router.push({
                     pathname: './edit_contacts',
@@ -96,7 +95,7 @@ export default function EditPhone(){
     }
 
     const cancelOperation = () => {
-        openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'As Alterações Foram Canceladas!'})
+        openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'A Operação Foi Cancelada!'})
         setTimeout(function () {
             router.push({
                 pathname: './edit_contacts',
@@ -108,7 +107,7 @@ export default function EditPhone(){
     return(
         <main className={styles.main}>
             {
-                id && num && idNum
+                id
                 ?
                     <Body 
                         change={handleChangeNumber} 
@@ -141,14 +140,14 @@ function Body({change, formValue, func, context, context2, funcCancel}){
         <>
             {context}
             {context2}
-            <h1 className={styles.title}>Edite o Número de Telefone <span class="material-symbols-outlined">call</span></h1>
+            <h1 className={styles.title}>Crie um novo Número de Telefone <span class="material-symbols-outlined">call</span></h1>
             <hr></hr>
             <Form>
                 <Form.Group className={styles.formNum} controlId="formGridNum">
                 <Form.Label>Número</Form.Label>
                 <Form.Control 
                     type="text" 
-                    placeholder="999999999" 
+                    placeholder="ex: 999999999" 
                     required 
                     minLength="9" 
                     maxlength="9"
@@ -158,10 +157,10 @@ function Body({change, formValue, func, context, context2, funcCancel}){
                 </Form.Group>
                 <hr></hr>
                 <div className={styles.contButtons}>
-                    <Button variant="success" size="sm" onClick={func}>Salvar <span class="material-symbols-outlined">done</span></Button>
+                    <Button variant="success" size="sm" onClick={func}>Criar <span class="material-symbols-outlined">done</span></Button>
     
                     <Button variant="danger" size="sm" onClick={funcCancel}>
-                        Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
+                        Cancelar Operação<span class="material-symbols-outlined">cancel</span>
                     </Button>
                 </div>
             </Form>

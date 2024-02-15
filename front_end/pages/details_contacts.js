@@ -13,14 +13,59 @@ export default function DetailsContacts(){
     console.log(`id: ${id} - nome: ${nome}`)
 
     const [status, setStatus] = useState({
+        dadosContato: undefined,
         dadosTell: undefined,
         dadosEnd: undefined,
+        statesContato: 'load',
         statesTell: 'load',
         statesEnd: 'load'
     })
 
     const apiTelefones = 'http://127.0.0.1:8000/telefones/'
     const apiEnderecos = 'http://127.0.0.1:8000/enderecos/'
+
+    const carregaContato = async () => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+            });
+            
+            if (!response.ok) {
+                setStatus({
+                    dadosContato: undefined,
+                    dadosTell: status.dadosTell,
+                    dadosEnd: status.dadosEnd,
+                    statesContato: 'erro',
+                    statesTell: status.statesTell,
+                    statesEnd: status.statesEnd,
+                })
+            }
+            const data = await response.json();
+            
+            setStatus({
+                dadosContato: data,
+                dadosTell: status.dadosTell,
+                dadosEnd: status.dadosEnd,
+                statesContato: 'ok',
+                statesTell: status.statesTell,
+                statesEnd: status.statesEnd,
+            })
+
+        } catch (error) {
+            console.error('Erro na requisição da API:', error.message);
+            setStatus({
+                dadosContato: undefined,
+                dadosTell: status.dadosTell,
+                dadosEnd: status.dadosEnd,
+                statesContato: 'erro',
+                statesTell: status.statesTell,
+                statesEnd: status.statesEnd,
+            })
+        }
+    }
 
     const carregaTelefones = async () => {
     
@@ -29,8 +74,10 @@ export default function DetailsContacts(){
             
             if (!response.ok) {
               setStatus({
+                dadosContato: status.dadosContato,
                 dadosTell: undefined,
                 dadosEnd: status.dadosEnd,
+                statesContato: status.statesContato,
                 statesTell: 'erro',
                 statesEnd: status.statesEnd,
               })
@@ -40,8 +87,10 @@ export default function DetailsContacts(){
             var filterData = data.filter(item => item.owner == id)
 
             setStatus({
+                dadosContato: status.dadosContato,
                 dadosTell: filterData,
                 dadosEnd: status.dadosEnd,
+                statesContato: status.statesContato,
                 statesTell: 'ok',
                 statesEnd: status.statesEnd,
             })
@@ -49,8 +98,10 @@ export default function DetailsContacts(){
           } catch (error) {
             console.error('Erro na requisição da API:', error.message);
             setStatus({
+                dadosContato: status.dadosContato,
                 dadosTell: undefined,
                 dadosEnd: status.dadosEnd,
+                statesContato: status.statesContato,
                 statesTell: 'erro',
                 statesEnd: status.statesEnd,
             })
@@ -64,20 +115,23 @@ export default function DetailsContacts(){
             
             if (!response.ok) {
                 setStatus({
+                    dadosContato: status.dadosContato,
                     dadosTell: status.dadosTell,
                     dadosEnd: undefined,
+                    statesContato: status.statesContato,
                     statesTell: status.statesTell,
                     statesEnd: 'erro',
                 })
             }
 
             const data = await response.json();
-
             var filterData = data.filter(item => item.contato == id)
 
             setStatus({
+                dadosContato: status.dadosContato,
                 dadosTell: status.dadosTell,
                 dadosEnd: filterData,
+                statesContato: status.statesContato,
                 statesTell: status.statesTell,
                 statesEnd: 'ok',
             })
@@ -85,41 +139,62 @@ export default function DetailsContacts(){
           } catch (error) {
             console.error('Erro na requisição da API:', error.message);
             setStatus({
+                dadosContato: status.dadosContato,
                 dadosTell: status.dadosTell,
                 dadosEnd: undefined,
+                statesContato: status.statesContato,
                 statesTell: status.statesTell,
                 statesEnd: 'erro',
             })
           }
     }
 
+    /*
     if(status.dadosTell == undefined && status.statesTell == 'load' && id != undefined){
         carregaTelefones()
     }
 
     if(status.dadosEnd == undefined && status.statesEnd == 'load' && id != undefined){
         carregaEnderecos()
+    }*/
+
+    // =============
+
+    if(status.statesContato == 'load' && id != undefined){
+        carregaContato()
+    }
+    if(status.statesTell == 'load' && id != undefined && status.statesContato != 'load'){
+        carregaTelefones()
+    }
+    if(status.statesEnd == 'load' && id != undefined && status.statesContato != 'load' && status.statesTell != 'load'){
+        carregaEnderecos()
     }
 
     return(
         <main className={styles.main}>
             {
-                status.statesTell == 'load' || status.statesEnd == 'load'
+                status.statesTell == 'load' || status.statesEnd == 'load' || status.statesContato == 'load'
                 ?
                     <Load/>
                 :
-                status.statesTell == 'erro' || status.statesEnd == 'erro'
+                status.statesTell == 'erro' || status.statesEnd == 'erro' || status.statesContato == 'erro'
                 ?
                     <Error/>
                 :
-                    <Listar objTell={status.dadosTell} objEnd={status.dadosEnd} nameContato={nome}/>
+                    <Listar 
+                        objTell={status.dadosTell} 
+                        objEnd={status.dadosEnd} 
+                        objCont={status.dadosContato} 
+                        nameContato={nome}
+                    />
             }
         </main>
     )
 }
 
-function Listar({objTell, objEnd, nameContato}){
+function Listar({objTell, objEnd, objCont, nameContato}){
     console.log('entrou no listar')
+    console.log(objCont)
     console.log(objTell)
     console.log(objEnd)
 
@@ -170,6 +245,10 @@ function Listar({objTell, objEnd, nameContato}){
                                 </div>
                             }
                         </div>
+                    </Col>
+
+                    <Col>
+                    
                     </Col>
                 </Row>
             </Container>

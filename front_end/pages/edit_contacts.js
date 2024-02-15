@@ -141,6 +141,10 @@ export default function EditContacts(){
             }
             else{
                 console.log('chama a pag de criar')
+                router.push({
+                    pathname: './create_phone',
+                    query: {id: id}
+                })
             }
         }
     }
