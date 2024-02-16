@@ -117,3 +117,17 @@
 .contButtons span{
   margin-left: 10px;
 }
+
+.criarEndereco{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.criarEndereco > h1{
+  font-size: 1.5rem;
+  font-weight: 300;
+}

@@ -69,9 +69,16 @@ export default function EditContacts(){
         }, 1000);
     };
 
-    const renderTooltip = (props) => (
+
+    const renderTooltipTell = (props) => (
         <Tooltip id="button-tooltip" {...props}>
-            Adicionar Novo Telefone
+            Adicione um novo número
+        </Tooltip>
+    );
+
+    const renderTooltipEnd = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            Adicione um Endereço
         </Tooltip>
     );
 
@@ -246,13 +253,14 @@ export default function EditContacts(){
 
             const data = await response.json();
             var filterData = data.filter(item => item.owner == id)
-           
+            console.log(filterData)
             setTelefone({
                 dados: filterData,
                 status: 'ok'
             })
-
+            
         } catch (error) {
+            console.log('entrou no erro de telefone')
             console.error('Erro na requisição da API:', error.message);
             setTelefone({
                 dados: undefined,
@@ -282,16 +290,29 @@ export default function EditContacts(){
 
             const data = await response.json();
             var filterData = data.filter(item => item.contato == id)
+            //console.log(`data do endereço: ${filterData.length}`)
+            if(filterData.length != 0){
+                setEndereco({
+                    rua: filterData[0].rua,
+                    bairro: filterData[0].bairro,
+                    cidade: filterData[0].cidade,
+                    num: filterData[0].num,
+                    status: 'ok'
+                })
+            }
+            else{
+                setEndereco({
+                    rua: undefined,
+                    bairro: undefined,
+                    cidade: undefined,
+                    num: undefined,
+                    status: 'ok'
+                })
+            }
             
-            setEndereco({
-                rua: filterData[0].rua,
-                bairro: filterData[0].bairro,
-                cidade: filterData[0].cidade,
-                num: filterData[0].num,
-                status: 'ok'
-            })
 
         } catch (error) {
+            console.log('entrou no erro do endereço')
             console.error('Erro na requisição da API:', error.message);
             setEndereco({
                 rua: undefined,
@@ -521,7 +542,8 @@ export default function EditContacts(){
                     cidade={objEndereco.cidade}
                     num={objEndereco.num}
                     func={formatData}
-                    funcRender={renderTooltip}
+                    funcRenderTell={renderTooltipTell}
+                    funcRenderEnd={renderTooltipEnd}
                     objPhone={objTelefone.dados}
                     funcDeleteneNum={deleteNumber}
                     funcCancel={cancelOperation}
@@ -547,7 +569,8 @@ function Forms({
         cidade,
         num,
         func,
-        funcRender,
+        funcRenderTell,
+        funcRenderEnd,
         objPhone,
         funcDeleteneNum,
         funcCancel
@@ -598,7 +621,7 @@ function Forms({
                             <OverlayTrigger
                                 placement="right"
                                 delay={{ show: 250, hide: 400 }}
-                                overlay={funcRender}
+                                overlay={funcRenderTell}
                                 >
                                 <Button onClick={() => func({destino: 'criar', num: '', idNum: ''})} variant="success"><span class="material-symbols-outlined">add</span></Button>
                             </OverlayTrigger>
@@ -621,66 +644,81 @@ function Forms({
 
                 <Row>
                     <h1 style={{fontWeight: '300'}}>Endereço</h1>
-                    <Form className={styles.formEndereco}>
-                        <Row>
-                            <Form.Group as={Col} controlId="formGridCity">
-                            <Form.Label>Cidade</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                placeholder="Rio de Janeiro" 
-                                required 
-                                minLength="1" 
-                                maxlength="250"
-                                onChange={changeCity}
-                                value={cidade}
-                            />
-                            </Form.Group>
-    
-                            <Form.Group as={Col} controlId="formGridReigh">
-                            <Form.Label>Bairro</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                placeholder="Centro" 
-                                required 
-                                minLength="1" 
-                                maxlength="250"
-                                onChange={changeReigh}
-                                value={bairro}
-                            />
-                            </Form.Group>
-                        </Row>
+                    {
+                        rua == undefined
+                        ?
+                            <div className={styles.criarEndereco}>
+                                <h1>O Contato ainda não possui endereço. Adicione um Novo!</h1>
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={funcRenderEnd}
+                                    >
+                                    <Button onClick={() => func({destino: 'criar', num: '', idNum: ''})} variant="success"><span class="material-symbols-outlined">add</span></Button>
+                                </OverlayTrigger>
+                            </div>
+                        :
+                            <Form className={styles.formEndereco}>
+                                <Row>
+                                    <Form.Group as={Col} controlId="formGridCity">
+                                    <Form.Label>Cidade</Form.Label>
+                                    <Form.Control 
+                                        type="text" 
+                                        placeholder="Rio de Janeiro" 
+                                        required 
+                                        minLength="1" 
+                                        maxlength="250"
+                                        onChange={changeCity}
+                                        value={cidade}
+                                    />
+                                    </Form.Group>
+            
+                                    <Form.Group as={Col} controlId="formGridReigh">
+                                    <Form.Label>Bairro</Form.Label>
+                                    <Form.Control 
+                                        type="text" 
+                                        placeholder="Centro" 
+                                        required 
+                                        minLength="1" 
+                                        maxlength="250"
+                                        onChange={changeReigh}
+                                        value={bairro}
+                                    />
+                                    </Form.Group>
+                                </Row>
 
-                        <Row>
-                            <Form.Group as={Col} controlId="formGridRoad">
-                            <Form.Label>Rua</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                placeholder="7 de Setembro" 
-                                required 
-                                minLength="1" 
-                                maxlength="250"
-                                onChange={changeRoad}
-                                value={rua}
-                            />
-                            </Form.Group>
-    
-                            <Form.Group as={Col} controlId="formGridNumber">
-                            <Form.Label>Nº</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                placeholder="10" 
-                                required 
-                                minLength="1" 
-                                maxlength="250"
-                                onChange={changeNumber}
-                                value={num}
-                            />
-                            </Form.Group>
-                        </Row>
-                    </Form>
+                                <Row>
+                                    <Form.Group as={Col} controlId="formGridRoad">
+                                    <Form.Label>Rua</Form.Label>
+                                    <Form.Control 
+                                        type="text" 
+                                        placeholder="7 de Setembro" 
+                                        required 
+                                        minLength="1" 
+                                        maxlength="250"
+                                        onChange={changeRoad}
+                                        value={rua}
+                                    />
+                                    </Form.Group>
+            
+                                    <Form.Group as={Col} controlId="formGridNumber">
+                                    <Form.Label>Nº</Form.Label>
+                                    <Form.Control 
+                                        type="text" 
+                                        placeholder="10" 
+                                        required 
+                                        minLength="1" 
+                                        maxlength="250"
+                                        onChange={changeNumber}
+                                        value={num}
+                                    />
+                                    </Form.Group>
+                                </Row>
+                            </Form>
+                    }
+                    
                 </Row>
             </Container>
-
             <div className={styles.contButtons}>
                 <Button variant="success" size="sm" onClick={() => func({destino: 'voltar', num: '', idNum: ''})}>
                     Salvar Alterações<span class="material-symbols-outlined">check</span>
