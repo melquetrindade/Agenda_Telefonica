@@ -36,11 +36,6 @@ export default function EditContacts(){
         status: 'load'
     })
 
-    const [editData, setEditData] = useState({
-        statusCont: false,
-        statusEnd: false
-    })
-
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
         api.info({
@@ -82,6 +77,7 @@ export default function EditContacts(){
         </Tooltip>
     );
 
+    /*
     const checksEmail = async ({email}) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/contatos/`, {
@@ -97,44 +93,130 @@ export default function EditContacts(){
             //console.log('chegou aqui')
             const data = await response.json();
             //console.log(data)
-            var filterData = data.filter(item => item.email == email)
-            //console.log(filterData)
+            var filterData = data.filter(item => (item.email == email && item.id != id))
+            console.log(filterData)
             
-            if(filterData){
-                //return true
+            if(filterData.length != 0){
+                console.log('não ta liberado')
             }
-            //return false
+            else{
+                console.log('ta liberado')
+            }
+            
 
         } catch (error) {
             console.error('Erro na requisição da API:', error.message);
         }
+    }*/
+
+
+    /* 
+    if(editData.statusCont && (editData.statusEnd || objEndereco.rua == undefined)){
+        console.log('entrou no if dos caminhos')
+        
+        if(destino == 'voltar'){
+            openMessage()
+            setTimeout(function () {
+                router.push({
+                    pathname: './contacts'
+                })
+            }, 1500);
+        }
+        else if(destino == 'editar'){
+            router.push({
+                pathname: './edit_phone',
+                query: {id: id, num: num, idNum: idNum}
+            })
+        }
+        else{
+            //console.log('chama a pag de criar')
+            router.push({
+                pathname: './create_phone',
+                query: {id: id}
+            })
+        }
     }
+    */
+
+    const [editData, setEditData] = useState({
+        statusCont: false,
+        statusEnd: false,
+        destino: '',
+        id: undefined,
+        num: '',
+        idPhone: undefined,
+    })
+
+    console.log(editData)
+
+    if(editData.statusCont && (editData.statusEnd || objEndereco.rua == undefined)){
+        //console.log('entrou no if dos caminhos')
+        /*
+        console.log(editData.destino)
+        console.log(editData.num)
+        console.log(editData.idPhone)*/
+
+        if(editData.destino == 'voltar'){
+            openMessage()
+            setTimeout(function () {
+                router.push({
+                    pathname: './contacts'
+                })
+            }, 1500);
+        }
+        else if(editData.destino == 'editar'){
+            router.push({
+                pathname: './edit_phone',
+                query: {id: editData.id, num: editData.num, idNum: editData.idPhone}
+            })
+        }
+        else{
+            //console.log('chama a pag de criar')
+            router.push({
+                pathname: './create_phone',
+                query: {id: id}
+            })
+        }
+    }
+    
 
     const formatData = ({destino, num, idNum}) => {
+        //console.log(document.getElementById('formGridName').value)
+        //console.log(document.getElementById('formGridEmail').value)
         //console.log(destino)
-
         const dataContato = {
             nome: document.getElementById('formGridName').value,
             email: document.getElementById('formGridEmail').value,
         };
 
-        const dataEndereco = {
+        var dataEndereco = {
             contato: id,
-            rua: document.getElementById('formGridRoad').value,
-            bairro: document.getElementById('formGridReigh').value,
-            cidade: document.getElementById('formGridCity').value,
-            num: document.getElementById('formGridNumber').value,
+            rua: undefined,
+            bairro: undefined,
+            cidade: undefined,
+            num: undefined,
         };
 
-        checksEmail({email: dataContato.email})
+        if(objEndereco.rua != undefined){
+            dataEndereco = {
+                contato: id,
+                rua: document.getElementById('formGridRoad').value,
+                bairro: document.getElementById('formGridReigh').value,
+                cidade: document.getElementById('formGridCity').value,
+                num: document.getElementById('formGridNumber').value,
+            };
+        }
+
+        //checksEmail({email: dataContato.email})
     
         var ok = true
 
         try{
             Object.keys(dataContato).forEach(key => {
                 if(!dataContato[key]){
+                    console.log(`entrou aqui: ${key}`)
                     ok = false
-                    openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+                    //openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
                     throw new Error('StopIteration');
                     
                 }
@@ -145,12 +227,14 @@ export default function EditContacts(){
             }
         }
 
-        if(ok){
+        if(ok && objEndereco.rua != undefined){
+            console.log('entrou no try do endereço')
             try{
                 Object.keys(dataEndereco).forEach(key => {
+                    console.log(dataEndereco[key])
                     if(!dataEndereco[key]){
                         ok = false
-                        openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+                        //openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
                         throw new Error('StopIteration');
                     }
                 });
@@ -161,41 +245,34 @@ export default function EditContacts(){
             }
         }
         
-
+        //console.log(`ok? ${ok}`)
         if(ok){
+            //console.log()
+            //console.log(destino)
+            //console.log(num)
+            //console.log(idNum)
+            setEditData({
+                statusCont: editData.statusCont,
+                statusEnd: editData.statusEnd,
+                destino: destino,
+                id: id,
+                num: num,
+                idPhone: idNum,
+            })
+
             if(!editData.statusCont){
                 editaContato({objData: dataContato})
             }
-            if(!editData.statusEnd && editData.statusCont){
+            if(!editData.statusEnd && editData.statusCont && objEndereco.rua != undefined){
+                //console.log('entrou para editar o endereco')
                 editaEndereco({objData: dataEndereco})
             }
             
-            if(editData.statusCont && editData.statusEnd){
-                if(destino == 'voltar'){
-                    openMessage()
-                    setTimeout(function () {
-                        router.push({
-                            pathname: './contacts'
-                        })
-                    }, 1500);
-                }
-                else if(destino == 'editar'){
-                    router.push({
-                        pathname: './edit_phone',
-                        query: {id: id, num: num, idNum: idNum}
-                    })
-                }
-                else{
-                    console.log('chama a pag de criar')
-                    router.push({
-                        pathname: './create_phone',
-                        query: {id: id}
-                    })
-                }
-            }
-            else{
-                openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
-            }
+            //console.log(`status editContato: ${editData.statusCont}`)
+            //console.log(`status editEndereço: ${editData.statusEnd}`)
+            //console.log(`conteúdo da rua: ${objEndereco.rua}`)
+
+            
             
         }
     }
@@ -347,22 +424,35 @@ export default function EditContacts(){
                 //throw new Error(`Erro na requisição: ${response.status}`);
                 setEditData({
                     statusCont: false,
-                    statusEnd: editData.statusEnd
+                    statusEnd: editData.statusEnd,
+                    destino: editData.destino,
+                    id: editData.id,
+                    num: editData.num,
+                    idPhone: editData.idPhone,
                 })
             }
             return response.json();
         })
         .then(data => {
+            console.log('entrou no set do edita contato')
             setEditData({
                 statusCont: true,
-                statusEnd: editData.statusEnd
+                statusEnd: editData.statusEnd,
+                destino: editData.destino,
+                id: editData.id,
+                num: editData.num,
+                idPhone: editData.idPhone,
             })
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
             setEditData({
                 statusCont: false,
-                statusEnd: editData.statusEnd
+                statusEnd: editData.statusEnd,
+                destino: editData.destino,
+                id: editData.id,
+                num: editData.num,
+                idPhone: editData.idPhone,
             })
         });
     }
@@ -380,7 +470,11 @@ export default function EditContacts(){
                 //throw new Error(`Erro na requisição: ${response.status}`);
                 setEditData({
                     statusCont: editData.statusCont,
-                    statusEnd: false
+                    statusEnd: false,
+                    destino: editData.destino,
+                    id: editData.id,
+                    num: editData.num,
+                    idPhone: editData.idPhone,
                 })
             }
             return response.json();
@@ -388,14 +482,22 @@ export default function EditContacts(){
         .then(data => {
             setEditData({
                 statusCont: editData.statusCont,
-                statusEnd: true
+                statusEnd: true,
+                destino: editData.destino,
+                id: editData.id,
+                num: editData.num,
+                idPhone: editData.idPhone,
             })
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
             setEditData({
                 statusCont: editData.statusCont,
-                statusEnd: false
+                statusEnd: false,
+                destino: editData.destino,
+                id: editData.id,
+                num: editData.num,
+                idPhone: editData.idPhone,
             })
         });
     }
