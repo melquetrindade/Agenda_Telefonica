@@ -17,13 +17,6 @@ export default function EditContacts(){
     const { id } = router.query
     console.log(`id: ${id}`)
 
-    const [objContato, setContato] = useState({
-        nome: '',
-        email: '',
-        status: 'load'
-    })
-
-    /*
     const [objEndereco, setEndereco] = useState({
         rua: '',
         bairro: '',
@@ -32,6 +25,7 @@ export default function EditContacts(){
         status: 'load'
     })
 
+    /*
     const [objTelefone, setTelefone] = useState({
         dados: undefined,
         status: 'load'
@@ -71,46 +65,13 @@ export default function EditContacts(){
         <Tooltip id="button-tooltip" {...props}>
             Adicione um novo número
         </Tooltip>
-    );
+    );*/
 
-    const renderTooltipEnd = (props) => (
+    const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
             Adicione um Endereço
         </Tooltip>
-    );*/
-
-    /*
-    const checksEmail = async ({email}) => {
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/contatos/`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-            });
-            
-            if (!response.ok) {
-                throw new Error(`Erro na requisição: ${response.status}`);
-            }
-            //console.log('chegou aqui')
-            const data = await response.json();
-            //console.log(data)
-            var filterData = data.filter(item => (item.email == email && item.id != id))
-            console.log(filterData)
-            
-            if(filterData.length != 0){
-                console.log('não ta liberado')
-            }
-            else{
-                console.log('ta liberado')
-            }
-            
-
-        } catch (error) {
-            console.error('Erro na requisição da API:', error.message);
-        }
-    }*/
-
+    );
 
     /* 
     if(editData.statusCont && (editData.statusEnd || objEndereco.rua == undefined)){
@@ -185,12 +146,7 @@ export default function EditContacts(){
 
     const formatData = ({destino, num, idNum}) => {
 
-        const dataContato = {
-            nome: document.getElementById('formGridName').value,
-            email: document.getElementById('formGridEmail').value,
-        };
-
-        /*
+        
         var dataEndereco = {
             contato: id,
             rua: undefined,
@@ -209,8 +165,6 @@ export default function EditContacts(){
             };
         }
 
-        //checksEmail({email: dataContato.email})
-        */
         var ok = true
 
         try{
@@ -250,10 +204,6 @@ export default function EditContacts(){
         
         //console.log(`ok? ${ok}`)
         if(ok){
-            //console.log()
-            //console.log(destino)
-            //console.log(num)
-            //console.log(idNum)
             setEditData({
                 statusCont: editData.statusCont,
                 statusEnd: editData.statusEnd,
@@ -270,13 +220,10 @@ export default function EditContacts(){
                 //console.log('entrou para editar o endereco')
                 editaEndereco({objData: dataEndereco})
             }
-            
-            //console.log(`status editContato: ${editData.statusCont}`)
-            //console.log(`status editEndereço: ${editData.statusEnd}`)
-            //console.log(`conteúdo da rua: ${objEndereco.rua}`)
         }
     }
 
+    /*
     const carregaContato = async () => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
@@ -312,7 +259,6 @@ export default function EditContacts(){
         }
     }
 
-    /*
     const carregaTelefone = async () => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/telefones/`, {
@@ -345,7 +291,7 @@ export default function EditContacts(){
                 status: 'erro'
             })
         }
-    }
+    }*/
 
     const carregaEndereco = async () => {
         try {
@@ -369,6 +315,7 @@ export default function EditContacts(){
             const data = await response.json();
             var filterData = data.filter(item => item.contato == id)
             //console.log(`data do endereço: ${filterData.length}`)
+
             if(filterData.length != 0){
                 setEndereco({
                     rua: filterData[0].rua,
@@ -384,13 +331,11 @@ export default function EditContacts(){
                     bairro: undefined,
                     cidade: undefined,
                     num: undefined,
-                    status: 'ok'
+                    status: 'not_exist'
                 })
             }
-            
-
+        
         } catch (error) {
-            console.log('entrou no erro do endereço')
             console.error('Erro na requisição da API:', error.message);
             setEndereco({
                 rua: undefined,
@@ -400,44 +345,12 @@ export default function EditContacts(){
                 status: 'erro'
             })
         }
-    }*/
+    }
 
-    if(objContato.status == 'load' && id != undefined){
-        carregaContato()
-    }
-    /*
-    if(objTelefone.status == 'load' && id != undefined && objContato.status != 'load'){
-        carregaTelefone()
-    }
-    if(objEndereco.status == 'load' && id != undefined && objContato.status != 'load' && objTelefone.status != 'load'){
+    if(objEndereco.status == 'load' && id != undefined){
         carregaEndereco()
-    }*/
-
-    const editaContato = async ({objData}) => {
-        fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(objData),
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.log('falha ao fazer a edição')
-                throw new Error(`Erro na requisição: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('edição realizada com sucesso')
-            
-        })
-        .catch(error => {
-            console.error('Erro durante a requisição POST:', error);
-        });
     }
 
-    /*
     const editaEndereco = async ({objData}) => {
         fetch(`http://127.0.0.1:8000/enderecos/${id}/`, {
         method: 'PUT',
@@ -448,55 +361,18 @@ export default function EditContacts(){
         })
         .then(response => {
             if (!response.ok) {
-                //throw new Error(`Erro na requisição: ${response.status}`);
-                setEditData({
-                    statusCont: editData.statusCont,
-                    statusEnd: false,
-                    destino: editData.destino,
-                    id: editData.id,
-                    num: editData.num,
-                    idPhone: editData.idPhone,
-                })
+                throw new Error(`Erro na requisição: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            setEditData({
-                statusCont: editData.statusCont,
-                statusEnd: true,
-                destino: editData.destino,
-                id: editData.id,
-                num: editData.num,
-                idPhone: editData.idPhone,
-            })
+            
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
-            setEditData({
-                statusCont: editData.statusCont,
-                statusEnd: false,
-                destino: editData.destino,
-                id: editData.id,
-                num: editData.num,
-                idPhone: editData.idPhone,
-            })
         });
-    }*/
-
-
-    const handleChangeName = (e) => {
-        const inputText = e.target.value
-
-        if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
-            setContato({
-                nome: inputText,
-                email: objContato.email,
-                status: objContato.status
-            })
-        }
     }
 
-    /*
     const handleChangeRoad = (e) => {
         const inputText = e.target.value
 
@@ -551,45 +427,7 @@ export default function EditContacts(){
                 status: objEndereco.status
             })
         }
-    }*/
-
-    const handleChangeEmail = (e) => {
-        const inputText = e.target.value
-
-        if (/^[a-zA-Z 0-9 @ . ']+$/.test(inputText) || inputText === '') {
-            setContato({
-                nome: objContato.nome,
-                email: inputText,
-                status: objContato.status
-            })
-        }
     }
-
-    /*
-    const deleteNumber = async ({idNumber}) => {
-        openMessage()
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/telefones/${idNumber}/`, {
-                method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              });
-            
-            if (!response.ok) {
-              openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Erro ao Deletar o Contato!'})
-            }
-            setTimeout(function () {
-                setTelefone({
-                    dados: undefined,
-                    status: 'load'
-                })
-            }, 1500);
-
-        } catch (error) {
-            openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Erro ao Deletar o Contato!'})
-        }
-    }*/
 
     const cancelOperation = () => {
         openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'As Alterações Foram Canceladas!'})
@@ -603,66 +441,132 @@ export default function EditContacts(){
     return(
         <main className={styles.main}>
             {
-                objContato.status == 'load'
+                objEndereco.status == 'load'
                 ?
                     <Load/>
                 :
-                objContato.status == 'erro'
+                objEndereco.status == 'erro'
                 ?
                     <Error/>
                 :
-                <Forms
-                    context01={contextHolder}
-                    context02={contextHolder2}
-                    changeName={handleChangeName}
-                    changeEmail={handleChangeEmail}
-                    nome={objContato.nome}
-                    email={objContato.email}
-                />
+                objEndereco.status == 'not_exist'
+                ?
+                    <CreateEnd/>
+                :
+                    <Forms
+                        context01={contextHolder}
+                        context02={contextHolder2}
+                        changeCity={handleChangeCity}
+                        changeReigh={handleChangeReighborhood}
+                        changeRoad={handleChangeRoad}
+                        changeNumber={handleChangeNumber}
+                        cidade={objEndereco.cidade}
+                        bairro={objEndereco.bairro}
+                        rua={objEndereco.rua}
+                        num={objEndereco.num}
+                    />
             }
         </main>
     )
 }
 
-function Forms({context01, context02, changeName, nome, changeEmail, email}){
+function CreateEnd(){
+    return(
+        <h1>Cria um endereço</h1>
+    )
+
+    /*
+    <div className={styles.criarEndereco}>
+                                <h1>O Contato ainda não possui endereço. Adicione um Novo!</h1>
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={funcRenderEnd}
+                                    >
+                                    <Button onClick={() => func({destino: 'criar', num: '', idNum: ''})} variant="success"><span class="material-symbols-outlined">add</span></Button>
+                                </OverlayTrigger>
+                            </div>
+    */
+}
+
+function Forms({
+    context01, 
+    context02, 
+    changeCity, 
+    cidade, 
+    changeReigh,
+    bairro,
+    changeRoad,
+    rua,
+    changeNumber,
+    num
+    }){
+
     return(
         <div className={styles.body}>
             {context01}
             {context02}
-            <h1>Contatos</h1>
+            <h1>Endereço</h1>
             <hr></hr>
             <Container>
-                <Row className={styles.rowTop}>
-                    <Col className={styles.colOne}>
-                        <Form className={styles.formContato}>
-                            <Form.Group controlId="formGridName">
-                            <Form.Label>Nome</Form.Label>
+                <Row>
+                    <Form className={styles.formEndereco}>
+                        <Row>
+                            <Form.Group as={Col} controlId="formGridCity">
+                            <Form.Label>Cidade</Form.Label>
                             <Form.Control 
                                 type="text" 
-                                placeholder="Fulano de Tal" 
+                                placeholder="Rio de Janeiro" 
                                 required 
                                 minLength="1" 
                                 maxlength="250"
-                                onChange={changeName}
-                                value={nome}
+                                onChange={changeCity}
+                                value={cidade}
                             />
                             </Form.Group>
-        
-                            <Form.Group controlId="formGridEmail">
-                            <Form.Label>E-mail</Form.Label>
+    
+                            <Form.Group as={Col} controlId="formGridReigh">
+                            <Form.Label>Bairro</Form.Label>
                             <Form.Control 
                                 type="text" 
-                                placeholder="fulado@gmail.com" 
+                                placeholder="Centro" 
                                 required 
                                 minLength="1" 
                                 maxlength="250"
-                                onChange={changeEmail}
-                                value={email}
+                                onChange={changeReigh}
+                                value={bairro}
                             />
                             </Form.Group>
-                        </Form>
-                    </Col>
+                        </Row>
 
+                        <Row>
+                            <Form.Group as={Col} controlId="formGridRoad">
+                            <Form.Label>Rua</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="7 de Setembro" 
+                                required 
+                                minLength="1" 
+                                maxlength="250"
+                                onChange={changeRoad}
+                                value={rua}
+                            />
+                            </Form.Group>
+    
+                            <Form.Group as={Col} controlId="formGridNumber">
+                            <Form.Label>Nº</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="10" 
+                                required 
+                                minLength="1" 
+                                maxlength="250"
+                                onChange={changeNumber}
+                                value={num}
+                            />
+                            </Form.Group>
+                        </Row>
+                    </Form>
                 </Row>
 
             </Container>
@@ -672,7 +576,7 @@ function Forms({context01, context02, changeName, nome, changeEmail, email}){
                 </Button>
 
                 <Button variant="primary" size="sm">
-                    Editar Endereço<span class="material-symbols-outlined">check</span>
+                    Editar Telefone<span class="material-symbols-outlined">check</span>
                 </Button>
     
                 <Button variant="danger" size="sm">
