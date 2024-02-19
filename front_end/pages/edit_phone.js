@@ -1,24 +1,26 @@
 import React, {useState} from "react";
 import { useRouter } from "next/router";
-import styles from '../styles/edit_phone.module.css'
+import styles from '../styles/edit_contacts.module.css'
 import {notification, message} from 'antd'
 
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
-export default function EditPhone(){
+export default function EditContacts(){
 
     const router = useRouter()
-    const {id, num, idNum} = router.query
-    console.log(`id: ${id} - num: ${num} - idNum: ${idNum}`)
+    const { id } = router.query
+    console.log(`id: ${id}`)
 
-    const [numTell, setNum] = useState(num)
+    const [objTelefone, setTelefone] = useState({
+        dados: undefined,
+        status: 'load'
+    })
 
-    if(numTell == undefined && num){
-        setNum(num)
-    }
-
-    const [api, contextHolder2] = notification.useNotification();
+    const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
         api.info({
             message: `${title}`,
@@ -27,7 +29,7 @@ export default function EditPhone(){
         });
     }
 
-    const [messageApi, contextHolder] = message.useMessage();
+    const [messageApi, contextHolder2] = message.useMessage();
     const key = 'updatable';
 
     const openMessage = () => {
@@ -45,31 +47,107 @@ export default function EditPhone(){
             });
         }, 1000);
     };
+    
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            Adicione um novo número
+        </Tooltip>
+    );
 
-    const handleChangeNumber = (e) => {
-        const inputText = e.target.value
+    const formatData = ({destino, num, idNum}) => {
 
-        if (/^[0-9']+$/.test(inputText) || inputText === '') {
-            setNum(inputText)
+        const dataTelefone = {
+            owner: document.getElementById('formGridName').value,
+            telefone: document.getElementById('formGridEmail').value,
+        };
+
+        var ok = true
+
+        try{
+            Object.keys(dataTelefone).forEach(key => {
+                if(!dataTelefone[key]){
+                    console.log(`entrou aqui: ${key}`)
+                    ok = false
+                    //openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+                    throw new Error('StopIteration');
+                    
+                }
+            });
+        } catch(error){
+            if (error.message !== 'StopIteration') {
+                throw error;
+            }
+        }
+        
+        //console.log(`ok? ${ok}`)
+        if(ok){
+            //console.log()
+            //console.log(destino)
+            //console.log(num)
+            //console.log(idNum)
+            setEditData({
+                statusCont: editData.statusCont,
+                statusEnd: editData.statusEnd,
+                destino: destino,
+                id: id,
+                num: num,
+                idPhone: idNum,
+            })
+
+            if(!editData.statusCont){
+                editaContato({objData: dataContato})
+            }
+            if(!editData.statusEnd && editData.statusCont && objEndereco.rua != undefined){
+                //console.log('entrou para editar o endereco')
+                editaEndereco({objData: dataEndereco})
+            }
+            
+            //console.log(`status editContato: ${editData.statusCont}`)
+            //console.log(`status editEndereço: ${editData.statusEnd}`)
+            //console.log(`conteúdo da rua: ${objEndereco.rua}`)
         }
     }
 
-    const formataDado = () => {
+    const carregaTelefone = async () => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/telefones/`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+            });
+            
+            if (!response.ok) {
+                setTelefone({
+                    dados: undefined,
+                    status: 'erro'
+                })
+            }
 
-        const objTell = {
-            owner: id,
-            telefone: document.getElementById('formGridNum').value
+            const data = await response.json();
+            var filterData = data.filter(item => item.owner == id)
+            console.log(filterData)
+            setTelefone({
+                dados: filterData,
+                status: 'ok'
+            })
+            
+        } catch (error) {
+            console.log('entrou no erro de telefone')
+            console.error('Erro na requisição da API:', error.message);
+            setTelefone({
+                dados: undefined,
+                status: 'erro'
+            })
         }
-
-        if(objTell.telefone.length == 9){
-            openMessage()
-            saveNum({objData: objTell})
-        }
-
     }
 
-    const saveNum = async ({objData}) => {
-        fetch(`http://127.0.0.1:8000/telefones/${idNum}/`, {
+    if(objTelefone.status == 'load' && id != undefined){
+        carregaTelefone()
+    }
+
+    const editaTelefone = async ({objData}) => {
+        fetch(`http://127.0.0.1:8000/telefones/${id}/`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -78,50 +156,178 @@ export default function EditPhone(){
         })
         .then(response => {
             if (!response.ok) {
+                console.log('falha ao fazer a edição')
                 throw new Error(`Erro na requisição: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            setTimeout(function () {
-                router.push({
-                    pathname: './edit_contacts',
-                    query: {id: id}
-                })
-            }, 1500);
+            console.log('edição realizada com sucesso')
+            
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
         });
     }
 
+    /*
+    const handleChangeNumber = (e) => {
+        const inputText = e.target.value
+
+        if (/^[0-9']+$/.test(inputText) || inputText === '') {
+            setEndereco({
+                rua: objEndereco.rua,
+                bairro: objEndereco.bairro,
+                cidade: objEndereco.cidade,
+                num: inputText,
+                status: objEndereco.status
+            })
+        }
+    }*/
+
+    const deleteNumber = async ({idNumber}) => {
+        openMessage()
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/telefones/${idNumber}/`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+            
+            if (!response.ok) {
+              openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Erro ao Deletar o Contato!'})
+            }
+            setTimeout(function () {
+                setTelefone({
+                    dados: undefined,
+                    status: 'load'
+                })
+            }, 1500);
+
+        } catch (error) {
+            openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Erro ao Deletar o Contato!'})
+        }
+    }
+
     const cancelOperation = () => {
         openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'As Alterações Foram Canceladas!'})
         setTimeout(function () {
             router.push({
-                pathname: './edit_contacts',
-                query: {id: id}
+                pathname: './contacts'
             })
         }, 1500)
+    }
+
+    
+    const navEditNumber = ({num, idNumber}) => {
+        router.push({
+            pathname: './edit_number',
+            query: {id: id, num: num, idNum: idNumber}
+        })
+    }
+
+    const navContacts = ({destino}) => {
+        router.push({
+            pathname: './contacts',
+        })
+    }
+
+    const navCreateNumber = () => {
+        router.push({
+            pathname: './create_number',
+            query: {id: id}
+        })
     }
 
     return(
         <main className={styles.main}>
             {
-                id && num && idNum
+                objTelefone.status == 'load'
                 ?
-                    <Body 
-                        change={handleChangeNumber} 
-                        formValue={numTell} 
-                        func={formataDado} 
-                        context={contextHolder}
-                        context2={contextHolder2}
-                        funcCancel={cancelOperation}
-                    />
-                :
                     <Load/>
+                :
+                objTelefone.status == 'erro'
+                ?
+                    <Error/>
+                :
+                <Forms
+                    context01={contextHolder}
+                    context02={contextHolder2}
+                    funcEditNumber={navEditNumber}
+                    funcDeleteNumber={deleteNumber}
+                    funcRender={renderTooltip}
+                    funcSuccess={navContacts}
+                    funcCancel={cancelOperation}
+                    objData={objTelefone.dados}
+                    funcCreateNumber={navCreateNumber}
+                />
             }
         </main>
+    )
+}
+
+function Forms({
+    context01, 
+    context02, 
+    funcEditNumber,
+    funcDeleteNumber,
+    funcRender,
+    funcSuccess,
+    funcCancel,
+    objData,
+    funcCreateNumber
+    }){
+    return(
+        <div className={styles.body}>
+            {context01}
+            {context02}
+            <h1 style={{fontWeight: '300', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                Telefones 
+                
+                <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 250, hide: 400 }}
+                    overlay={funcRender}
+                    >
+                    <Button onClick={funcCreateNumber} variant="success"><span class="material-symbols-outlined">add</span></Button>
+                </OverlayTrigger>
+            </h1>
+            <hr></hr>
+            <Container>
+                <Row className={styles.rowTop}>
+                    <div className={styles.formTelefone}>
+                        {
+                            objData.length == 0
+                            ?
+                                <div>
+                                    <h1>O contato não possui Números de Telefones!</h1>
+                                </div>
+                            :
+                                objData.map((item) => (
+                                    <div>
+                                        <div className={styles.numero}>{item.telefone}</div>
+    
+                                        <div className={styles.spanEdit}><span onClick={() => funcEditNumber({num: item.telefone, idNumber: item.id})} class="material-symbols-outlined">edit</span></div>
+    
+                                        <div className={styles.spanDelete}><span onClick={() => funcDeleteNumber({idNumber: item.id})} class="material-symbols-outlined">delete</span></div>
+                                    </div>
+                                )) 
+                        }
+                    </div>
+                </Row>
+            </Container>
+
+            <div className={styles.contButtons}>
+                <Button variant="success" size="sm" onClick={funcSuccess}>
+                    Salvar Alterações<span class="material-symbols-outlined">check</span>
+                </Button>
+
+                <Button variant="danger" size="sm" onClick={funcCancel}>
+                    Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
+                </Button>
+            </div>
+        </div>
     )
 }
 
@@ -135,36 +341,8 @@ function Load(){
     )
 }
 
-function Body({change, formValue, func, context, context2, funcCancel}){
-
+function Error(){
     return(
-        <>
-            {context}
-            {context2}
-            <h1 className={styles.title}>Edite o Número de Telefone <span class="material-symbols-outlined">call</span></h1>
-            <hr></hr>
-            <Form>
-                <Form.Group className={styles.formNum} controlId="formGridNum">
-                <Form.Label>Número</Form.Label>
-                <Form.Control 
-                    type="text" 
-                    placeholder="999999999" 
-                    required 
-                    minLength="9" 
-                    maxlength="9"
-                    onChange={change}
-                    value={formValue}
-                />
-                </Form.Group>
-                <hr></hr>
-                <div className={styles.contButtons}>
-                    <Button variant="success" size="sm" onClick={func}>Salvar <span class="material-symbols-outlined">done</span></Button>
-    
-                    <Button variant="danger" size="sm" onClick={funcCancel}>
-                        Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
-                    </Button>
-                </div>
-            </Form>
-        </>
+        <h1>Error</h1>
     )
 }

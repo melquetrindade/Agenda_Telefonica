@@ -84,7 +84,7 @@ export default function CreatePhone(){
             openMessage()
             setTimeout(function () {
                 router.push({
-                    pathname: './edit_contacts',
+                    pathname: './edit_phone',
                     query: {id: id}
                 })
             }, 1500);
@@ -98,7 +98,7 @@ export default function CreatePhone(){
         openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'A Operação Foi Cancelada!'})
         setTimeout(function () {
             router.push({
-                pathname: './edit_contacts',
+                pathname: './edit_phone',
                 query: {id: id}
             })
         }, 1500)

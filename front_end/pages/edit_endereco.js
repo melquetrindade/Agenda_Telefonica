@@ -25,12 +25,6 @@ export default function EditContacts(){
         status: 'load'
     })
 
-    /*
-    const [objTelefone, setTelefone] = useState({
-        dados: undefined,
-        status: 'load'
-    })*/
-
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
         api.info({
@@ -58,14 +52,6 @@ export default function EditContacts(){
             });
         }, 1000);
     };
-
-
-    /*
-    const renderTooltipTell = (props) => (
-        <Tooltip id="button-tooltip" {...props}>
-            Adicione um novo número
-        </Tooltip>
-    );*/
 
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
@@ -327,10 +313,10 @@ export default function EditContacts(){
             }
             else{
                 setEndereco({
-                    rua: undefined,
-                    bairro: undefined,
-                    cidade: undefined,
-                    num: undefined,
+                    rua: '',
+                    bairro: '',
+                    cidade: '',
+                    num: '',
                     status: 'not_exist'
                 })
             }
@@ -438,6 +424,13 @@ export default function EditContacts(){
         }, 1500)
     }
 
+    const navTelefone = () => {
+        router.push({
+            pathname: './edit_phone',
+            query: {id: id}
+        })
+    }
+
     return(
         <main className={styles.main}>
             {
@@ -448,10 +441,6 @@ export default function EditContacts(){
                 objEndereco.status == 'erro'
                 ?
                     <Error/>
-                :
-                objEndereco.status == 'not_exist'
-                ?
-                    <CreateEnd/>
                 :
                     <Forms
                         context01={contextHolder}
@@ -464,6 +453,8 @@ export default function EditContacts(){
                         bairro={objEndereco.bairro}
                         rua={objEndereco.rua}
                         num={objEndereco.num}
+                        status={objEndereco.status}
+                        funcNavPhone={navTelefone}
                     />
             }
         </main>
@@ -499,7 +490,9 @@ function Forms({
     changeRoad,
     rua,
     changeNumber,
-    num
+    num,
+    status,
+    funcNavPhone
     }){
 
     return(
@@ -507,6 +500,13 @@ function Forms({
             {context01}
             {context02}
             <h1>Endereço</h1>
+            {
+                status == 'not_exist'
+                ?
+                    <p>Adicione um Endereço ao Contato!</p>
+                :
+                    null
+            }
             <hr></hr>
             <Container>
                 <Row>
@@ -571,12 +571,20 @@ function Forms({
 
             </Container>
             <div className={styles.contButtons}>
-                <Button variant="success" size="sm" >
-                    Salvar Alterações<span class="material-symbols-outlined">check</span>
-                </Button>
-
-                <Button variant="primary" size="sm">
-                    Editar Telefone<span class="material-symbols-outlined">check</span>
+                {
+                    status == 'not_exist'
+                    ?
+                    <Button variant="success" size="sm" >
+                        Adicionar Endereço<span class="material-symbols-outlined">check</span>
+                    </Button>
+                    :
+                    <Button variant="success" size="sm" >
+                        Salvar Alterações<span class="material-symbols-outlined">check</span>
+                    </Button>
+                }
+                
+                <Button variant="primary" size="sm" onClick={funcNavPhone}>
+                    Editar Telefone<span class="material-symbols-outlined">navigate_next</span>
                 </Button>
     
                 <Button variant="danger" size="sm">

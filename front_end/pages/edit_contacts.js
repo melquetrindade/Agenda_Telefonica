@@ -600,6 +600,13 @@ export default function EditContacts(){
         }, 1500)
     }
 
+    const navEndereco = () => {
+        router.push({
+            pathname: './edit_endereco',
+            query: {id: id}
+        })
+    }
+
     return(
         <main className={styles.main}>
             {
@@ -618,13 +625,14 @@ export default function EditContacts(){
                     changeEmail={handleChangeEmail}
                     nome={objContato.nome}
                     email={objContato.email}
+                    funcNext={navEndereco}
                 />
             }
         </main>
     )
 }
 
-function Forms({context01, context02, changeName, nome, changeEmail, email}){
+function Forms({context01, context02, changeName, nome, changeEmail, email, funcNext}){
     return(
         <div className={styles.body}>
             {context01}
@@ -671,8 +679,8 @@ function Forms({context01, context02, changeName, nome, changeEmail, email}){
                     Salvar Alterações<span class="material-symbols-outlined">check</span>
                 </Button>
 
-                <Button variant="primary" size="sm">
-                    Editar Endereço<span class="material-symbols-outlined">check</span>
+                <Button variant="primary" size="sm" onClick={funcNext}>
+                    Editar Endereço<span class="material-symbols-outlined">navigate_next</span>
                 </Button>
     
                 <Button variant="danger" size="sm">
