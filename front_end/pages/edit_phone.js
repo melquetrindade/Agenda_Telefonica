@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import { useRouter } from "next/router";
-import styles from '../styles/edit_contacts.module.css'
+import styles from '../styles/edit_phone.module.css'
 import {notification, message} from 'antd'
 
+import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
@@ -19,6 +20,11 @@ export default function EditContacts(){
         dados: undefined,
         status: 'load'
     })
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
@@ -210,16 +216,13 @@ export default function EditContacts(){
         }
     }
 
-    const cancelOperation = () => {
-        openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'As Alterações Foram Canceladas!'})
-        setTimeout(function () {
-            router.push({
-                pathname: './contacts'
-            })
-        }, 1500)
+    const navEditContato = () => {
+        router.push({
+            pathname: './edit_contacts',
+            query: {id: id}
+        })
     }
 
-    
     const navEditNumber = ({num, idNumber}) => {
         router.push({
             pathname: './edit_number',
@@ -227,7 +230,7 @@ export default function EditContacts(){
         })
     }
 
-    const navContacts = ({destino}) => {
+    const navContacts = () => {
         router.push({
             pathname: './contacts',
         })
@@ -257,10 +260,13 @@ export default function EditContacts(){
                     funcEditNumber={navEditNumber}
                     funcDeleteNumber={deleteNumber}
                     funcRender={renderTooltip}
-                    funcSuccess={navContacts}
-                    funcCancel={cancelOperation}
+                    navPagInicial={navContacts}
+                    navEditCont={navEditContato}
                     objData={objTelefone.dados}
                     funcCreateNumber={navCreateNumber}
+                    show={show}
+                    funcHandleClose={handleClose}
+                    funcHandleShow={handleShow}
                 />
             }
         </main>
@@ -273,10 +279,13 @@ function Forms({
     funcEditNumber,
     funcDeleteNumber,
     funcRender,
-    funcSuccess,
-    funcCancel,
+    navPagInicial,
+    navEditCont,
     objData,
-    funcCreateNumber
+    funcCreateNumber,
+    show,
+    funcHandleClose,
+    funcHandleShow
     }){
     return(
         <div className={styles.body}>
@@ -301,24 +310,69 @@ function Forms({
                             objData.length == 0
                             ?
                                 <div>
-                                    <h1>O contato não possui Números de Telefones!</h1>
+                                    <h1 style={{fontWeight: '300', fontSize: '1.5rem'}}>O contato não possui números de Telefones. Adicione um no botão acima!</h1>
                                 </div>
                             :
-                                objData.map((item) => (
-                                    <div>
-                                        <div className={styles.numero}>{item.telefone}</div>
-    
-                                        <div className={styles.spanEdit}><span onClick={() => funcEditNumber({num: item.telefone, idNumber: item.id})} class="material-symbols-outlined">edit</span></div>
-    
-                                        <div className={styles.spanDelete}><span onClick={() => funcDeleteNumber({idNumber: item.id})} class="material-symbols-outlined">delete</span></div>
-                                    </div>
-                                )) 
+                                <div className={styles.contPhones}>
+                                    {
+                                        objData.map((item) => (
+                                            <div>
+                                                <div className={styles.numero}>{item.telefone}</div>
+            
+                                                <div className={styles.spanEdit}><span onClick={() => funcEditNumber({num: item.telefone, idNumber: item.id})} class="material-symbols-outlined">edit</span></div>
+            
+                                                <div className={styles.spanDelete}><span onClick={() => funcDeleteNumber({idNumber: item.id})} class="material-symbols-outlined">delete</span></div>
+                                            </div>
+                                        ))
+                                    }
+                                </div> 
                         }
                     </div>
                 </Row>
             </Container>
 
             <div className={styles.contButtons}>
+                
+                <Button variant="success" size="sm" onClick={funcHandleShow}>
+                    Concluir Edição<span class="material-symbols-outlined">check</span>
+                </Button>
+
+                <Modal
+                    show={show}
+                    onHide={funcHandleClose}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Edição Concluída</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        Para onde deseja ser redirecionado?
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={navPagInicial}>
+                            Página Inicial
+                        </Button>
+                        <Button variant="primary" onClick={navEditCont}>
+                            Voltar para Edição
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            
+            </div>
+        </div>
+    )
+}
+
+/*
+
+<Button variant="primary" onClick={handleShow}>
+                    Launch static backdrop modal
+                </Button>
+
+<div className={styles.contButtons}>
                 <Button variant="success" size="sm" onClick={funcSuccess}>
                     Salvar Alterações<span class="material-symbols-outlined">check</span>
                 </Button>
@@ -327,9 +381,7 @@ function Forms({
                     Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
                 </Button>
             </div>
-        </div>
-    )
-}
+*/
 
 function Load(){
     return(

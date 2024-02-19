@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useRouter } from "next/router";
-import styles from '../styles/edit_phone.module.css'
+import styles from '../styles/edit_number.module.css'
 import {notification, message} from 'antd'
 
 import Button from 'react-bootstrap/Button';
