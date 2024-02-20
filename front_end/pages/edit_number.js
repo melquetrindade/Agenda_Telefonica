@@ -5,6 +5,7 @@ import {notification, message} from 'antd'
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 
 export default function EditPhone(){
 
@@ -13,6 +14,11 @@ export default function EditPhone(){
     console.log(`id: ${id} - num: ${num} - idNum: ${idNum}`)
 
     const [numTell, setNum] = useState(num)
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     if(numTell == undefined && num){
         setNum(num)
@@ -98,14 +104,17 @@ export default function EditPhone(){
         });
     }
 
-    const cancelOperation = () => {
-        openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'As Alterações Foram Canceladas!'})
-        setTimeout(function () {
-            router.push({
-                pathname: './edit_phone',
-                query: {id: id}
-            })
-        }, 1500)
+    const navPagAnterior = () => {
+        router.push({
+            pathname: './edit_phone',
+            query: {id: id}
+        })
+    }
+
+    const navContacts = () => {
+        router.push({
+            pathname: '../contacts'
+        })
     }
 
     return(
@@ -119,7 +128,11 @@ export default function EditPhone(){
                         func={formataDado} 
                         context={contextHolder}
                         context2={contextHolder2}
-                        funcCancel={cancelOperation}
+                        show={show}
+                        funcHandleClose={handleClose}
+                        funcHandleShow={handleShow}
+                        navPagInicial={navContacts}
+                        navEditCont={navPagAnterior}
                     />
                 :
                     <Load/>
@@ -138,7 +151,18 @@ function Load(){
     )
 }
 
-function Body({change, formValue, func, context, context2, funcCancel}){
+function Body({
+    change, 
+    formValue, 
+    func, 
+    context, 
+    context2,
+    show,
+    funcHandleClose,
+    funcHandleShow,
+    navPagInicial,
+    navEditCont
+    }){
 
     return(
         <>
@@ -161,11 +185,37 @@ function Body({change, formValue, func, context, context2, funcCancel}){
                 </Form.Group>
                 <hr></hr>
                 <div className={styles.contButtons}>
-                    <Button variant="success" size="sm" onClick={func}>Salvar <span class="material-symbols-outlined">done</span></Button>
+                    <Button variant="success" size="sm" onClick={func}>
+                        Salvar <span class="material-symbols-outlined">done</span>
+                    </Button>
     
-                    <Button variant="danger" size="sm" onClick={funcCancel}>
+                    <Button variant="danger" size="sm" onClick={funcHandleShow}>
                         Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
                     </Button>
+
+                    <Modal
+                        show={show}
+                        onHide={funcHandleClose}
+                        backdrop="static"
+                        keyboard={false}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Alteração Cancelada</Modal.Title>
+                        </Modal.Header>
+
+                        <Modal.Body>
+                            Para onde deseja ser redirecionado?
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={navPagInicial}>
+                                Página Inicial
+                            </Button>
+                            <Button variant="primary" onClick={navEditCont}>
+                                Voltar a Página anterior
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             </Form>
         </>

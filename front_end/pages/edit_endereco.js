@@ -8,8 +8,7 @@ import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
+import Modal from 'react-bootstrap/Modal';
 
 export default function EditContacts(){
 
@@ -18,12 +17,29 @@ export default function EditContacts(){
     console.log(`id: ${id}`)
 
     const [objEndereco, setEndereco] = useState({
+        idEndereco: undefined,
         rua: '',
         bairro: '',
         cidade: '',
         num: '',
         status: 'load'
     })
+
+    const [show, setShow] = useState({
+        has_show: false,
+        title: ''
+    });
+
+    const handleClose = () => setShow({
+        has_show: false,
+        title: ''
+    });
+    const handleShow = ({titulo}) => {
+        setShow({
+            has_show: true,
+            title: titulo
+        })
+    };
 
     const [api, contextHolder] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
@@ -53,112 +69,24 @@ export default function EditContacts(){
         }, 1000);
     };
 
-    const renderTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props}>
-            Adicione um Endereço
-        </Tooltip>
-    );
+    const formatData = () => {
 
-    /* 
-    if(editData.statusCont && (editData.statusEnd || objEndereco.rua == undefined)){
-        console.log('entrou no if dos caminhos')
-        
-        if(destino == 'voltar'){
-            openMessage()
-            setTimeout(function () {
-                router.push({
-                    pathname: './contacts'
-                })
-            }, 1500);
-        }
-        else if(destino == 'editar'){
-            router.push({
-                pathname: './edit_phone',
-                query: {id: id, num: num, idNum: idNum}
-            })
-        }
-        else{
-            //console.log('chama a pag de criar')
-            router.push({
-                pathname: './create_phone',
-                query: {id: id}
-            })
-        }
-    }
-    */
-
-    /*
-    const [editData, setEditData] = useState({
-        statusCont: false,
-        statusEnd: false,
-        destino: '',
-        id: undefined,
-        num: '',
-        idPhone: undefined,
-    })
-
-    console.log(editData)
-
-    if(editData.statusCont && (editData.statusEnd || objEndereco.rua == undefined)){
-        //console.log('entrou no if dos caminhos')
-        
-        console.log(editData.destino)
-        console.log(editData.num)
-        console.log(editData.idPhone)
-
-        if(editData.destino == 'voltar'){
-            openMessage()
-            setTimeout(function () {
-                router.push({
-                    pathname: './contacts'
-                })
-            }, 1500);
-        }
-        else if(editData.destino == 'editar'){
-            router.push({
-                pathname: './edit_phone',
-                query: {id: editData.id, num: editData.num, idNum: editData.idPhone}
-            })
-        }
-        else{
-            //console.log('chama a pag de criar')
-            router.push({
-                pathname: './create_phone',
-                query: {id: id}
-            })
-        }
-    }*/
-    
-
-    const formatData = ({destino, num, idNum}) => {
-
-        
-        var dataEndereco = {
+        const dataEndereco = {
             contato: id,
-            rua: undefined,
-            bairro: undefined,
-            cidade: undefined,
-            num: undefined,
+            rua: document.getElementById('formGridRoad').value,
+            bairro: document.getElementById('formGridReigh').value,
+            cidade: document.getElementById('formGridCity').value,
+            num: document.getElementById('formGridNumber').value,
         };
-
-        if(objEndereco.rua != undefined){
-            dataEndereco = {
-                contato: id,
-                rua: document.getElementById('formGridRoad').value,
-                bairro: document.getElementById('formGridReigh').value,
-                cidade: document.getElementById('formGridCity').value,
-                num: document.getElementById('formGridNumber').value,
-            };
-        }
 
         var ok = true
 
         try{
-            Object.keys(dataContato).forEach(key => {
-                if(!dataContato[key]){
+            Object.keys(dataEndereco).forEach(key => {
+                if(!dataEndereco[key]){
                     console.log(`entrou aqui: ${key}`)
                     ok = false
-                    //openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+                    openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
                     throw new Error('StopIteration');
                     
                 }
@@ -169,116 +97,16 @@ export default function EditContacts(){
             }
         }
 
-        /*
-        if(ok && objEndereco.rua != undefined){
-            console.log('entrou no try do endereço')
-            try{
-                Object.keys(dataEndereco).forEach(key => {
-                    console.log(dataEndereco[key])
-                    if(!dataEndereco[key]){
-                        ok = false
-                        //openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
-                        throw new Error('StopIteration');
-                    }
-                });
-            } catch(error){
-                if (error.message !== 'StopIteration') {
-                    throw error;
-                }
-            }
-        }*/
-        
-        //console.log(`ok? ${ok}`)
         if(ok){
-            setEditData({
-                statusCont: editData.statusCont,
-                statusEnd: editData.statusEnd,
-                destino: destino,
-                id: id,
-                num: num,
-                idPhone: idNum,
-            })
-
-            if(!editData.statusCont){
-                editaContato({objData: dataContato})
-            }
-            if(!editData.statusEnd && editData.statusCont && objEndereco.rua != undefined){
-                //console.log('entrou para editar o endereco')
+            if(objEndereco.idEndereco != undefined){
                 editaEndereco({objData: dataEndereco})
             }
+            else{
+                criarEndereco({objData: dataEndereco})
+            }
         }
     }
-
-    /*
-    const carregaContato = async () => {
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-            });
-            
-            if (!response.ok) {
-                setContato({
-                    nome: undefined,
-                    email: undefined,
-                    status: 'erro'
-                })
-            }
-
-            const data = await response.json();
-            
-            setContato({
-                nome: data.nome,
-                email: data.email,
-                status: 'ok'
-            })
-
-        } catch (error) {
-            console.error('Erro na requisição da API:', error.message);
-            setContato({
-                nome: undefined,
-                email: undefined,
-                status: 'erro'
-            })
-        }
-    }
-
-    const carregaTelefone = async () => {
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/telefones/`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-            });
-            
-            if (!response.ok) {
-                setTelefone({
-                    dados: undefined,
-                    status: 'erro'
-                })
-            }
-
-            const data = await response.json();
-            var filterData = data.filter(item => item.owner == id)
-            console.log(filterData)
-            setTelefone({
-                dados: filterData,
-                status: 'ok'
-            })
-            
-        } catch (error) {
-            console.log('entrou no erro de telefone')
-            console.error('Erro na requisição da API:', error.message);
-            setTelefone({
-                dados: undefined,
-                status: 'erro'
-            })
-        }
-    }*/
-
+    
     const carregaEndereco = async () => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/enderecos/`, {
@@ -290,6 +118,7 @@ export default function EditContacts(){
             
             if (!response.ok) {
                 setEndereco({
+                    idEndereco: undefined,
                     rua: undefined,
                     bairro: undefined,
                     cidade: undefined,
@@ -300,10 +129,10 @@ export default function EditContacts(){
 
             const data = await response.json();
             var filterData = data.filter(item => item.contato == id)
-            //console.log(`data do endereço: ${filterData.length}`)
 
             if(filterData.length != 0){
                 setEndereco({
+                    idEndereco: filterData[0].id,
                     rua: filterData[0].rua,
                     bairro: filterData[0].bairro,
                     cidade: filterData[0].cidade,
@@ -313,6 +142,7 @@ export default function EditContacts(){
             }
             else{
                 setEndereco({
+                    idEndereco: undefined,
                     rua: '',
                     bairro: '',
                     cidade: '',
@@ -324,6 +154,7 @@ export default function EditContacts(){
         } catch (error) {
             console.error('Erro na requisição da API:', error.message);
             setEndereco({
+                idEndereco: undefined,
                 rua: undefined,
                 bairro: undefined,
                 cidade: undefined,
@@ -338,7 +169,7 @@ export default function EditContacts(){
     }
 
     const editaEndereco = async ({objData}) => {
-        fetch(`http://127.0.0.1:8000/enderecos/${id}/`, {
+        fetch(`http://127.0.0.1:8000/enderecos/${objEndereco.idEndereco}/`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -352,7 +183,30 @@ export default function EditContacts(){
             return response.json();
         })
         .then(data => {
-            
+            handleShow({titulo: 'Alterações realizadas com Sucesso'})
+        })
+        .catch(error => {
+            console.error('Erro durante a requisição POST:', error);
+        });
+    }
+
+    const criarEndereco = async ({objData}) => {
+        fetch(`http://127.0.0.1:8000/enderecos/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(objData),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro na requisição: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('alterações realizadas com sucesso')
+            handleShow({titulo: 'Endereço adicionado com Sucesso'})
         })
         .catch(error => {
             console.error('Erro durante a requisição POST:', error);
@@ -364,6 +218,7 @@ export default function EditContacts(){
 
         if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
             setEndereco({
+                idEndereco: objEndereco.idEndereco,
                 rua: inputText,
                 bairro: objEndereco.bairro,
                 cidade: objEndereco.cidade,
@@ -378,6 +233,7 @@ export default function EditContacts(){
 
         if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
             setEndereco({
+                idEndereco: objEndereco.idEndereco,
                 rua: objEndereco.rua,
                 bairro: inputText,
                 cidade: objEndereco.cidade,
@@ -392,6 +248,7 @@ export default function EditContacts(){
 
         if (/^[a-zA-Z 0-9']+$/.test(inputText) || inputText === '') {
             setEndereco({
+                idEndereco: objEndereco.idEndereco,
                 rua: objEndereco.rua,
                 bairro: objEndereco.bairro,
                 cidade: inputText,
@@ -406,6 +263,7 @@ export default function EditContacts(){
 
         if (/^[A-Z 0-9']+$/.test(inputText) || inputText === '') {
             setEndereco({
+                idEndereco: objEndereco.idEndereco,
                 rua: objEndereco.rua,
                 bairro: objEndereco.bairro,
                 cidade: objEndereco.cidade,
@@ -416,18 +274,29 @@ export default function EditContacts(){
     }
 
     const cancelOperation = () => {
-        openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'As Alterações Foram Canceladas!'})
-        setTimeout(function () {
-            router.push({
-                pathname: './contacts'
-            })
-        }, 1500)
+        router.push({
+            pathname: './contacts'
+        })
+        
     }
 
     const navTelefone = () => {
         router.push({
             pathname: './edit_phone',
             query: {id: id}
+        })
+    }
+
+    const navContato = () => {
+        router.push({
+            pathname: './edit_contacts',
+            query: {id: id}
+        })
+    }
+
+    const navPagInitial = () => {
+        router.push({
+            pathname: './contacts',
         })
     }
 
@@ -454,7 +323,13 @@ export default function EditContacts(){
                         rua={objEndereco.rua}
                         num={objEndereco.num}
                         status={objEndereco.status}
-                        funcNavPhone={navTelefone}
+                        show={show}
+                        funcHandleClose={handleClose}
+                        funcCancel={cancelOperation}
+                        funcNavCont={navContato}
+                        funcNavTell={navTelefone}
+                        navPagInicial={navPagInitial}
+                        funcFormData={formatData}
                     />
             }
         </main>
@@ -492,7 +367,13 @@ function Forms({
     changeNumber,
     num,
     status,
-    funcNavPhone
+    show,
+    funcHandleClose,
+    funcCancel,
+    funcNavCont,
+    funcNavTell,
+    navPagInicial,
+    funcFormData
     }){
 
     return(
@@ -503,7 +384,7 @@ function Forms({
             {
                 status == 'not_exist'
                 ?
-                    <p>Adicione um Endereço ao Contato!</p>
+                    <p>O contato não possui Endereço. Adicione um Agora!</p>
                 :
                     null
             }
@@ -574,241 +455,49 @@ function Forms({
                 {
                     status == 'not_exist'
                     ?
-                    <Button variant="success" size="sm" >
+                    <Button variant="success" size="sm" onClick={funcFormData}>
                         Adicionar Endereço<span class="material-symbols-outlined">check</span>
                     </Button>
                     :
-                    <Button variant="success" size="sm" >
+                    <Button variant="success" size="sm" onClick={funcFormData}>
                         Salvar Alterações<span class="material-symbols-outlined">check</span>
                     </Button>
                 }
-                
-                <Button variant="primary" size="sm" onClick={funcNavPhone}>
-                    Editar Telefone<span class="material-symbols-outlined">navigate_next</span>
-                </Button>
-    
-                <Button variant="danger" size="sm">
-                    Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
-                </Button>
-            </div>
-        </div>
-    )
-}
-
-/* 
-{
-                objContato.status == 'load' || objTelefone.status == 'load' || objEndereco.status == 'load'
-                ?
-                    <Load/>
-                :
-                objContato.status == 'erro' || objTelefone.status == 'erro' || objEndereco.status == 'erro'
-                ?
-                    <Error/>
-                :
-                <Forms
-                    context01={contextHolder}
-                    context02={contextHolder2}
-                    changeName={handleChangeName}
-                    changeEmail={handleChangeEmail}
-                    changeRoad={handleChangeRoad}
-                    changeReigh={handleChangeReighborhood}
-                    changeCity={handleChangeCity}
-                    changeNumber={handleChangeNumber}
-                    nome={objContato.nome}
-                    email={objContato.email}
-                    rua={objEndereco.rua}
-                    bairro={objEndereco.bairro}
-                    cidade={objEndereco.cidade}
-                    num={objEndereco.num}
-                    func={formatData}
-                    funcRenderTell={renderTooltipTell}
-                    funcRenderEnd={renderTooltipEnd}
-                    objPhone={objTelefone.dados}
-                    funcDeleteneNum={deleteNumber}
-                    funcCancel={cancelOperation}
-                />
-            }
-*/
-
-/*
-function Forms({
-        context01, 
-        context02, 
-        changeName, 
-        changeEmail, 
-        changeRoad,
-        changeReigh,
-        changeCity,
-        changeNumber,
-        nome, 
-        email,
-        rua,
-        bairro,
-        cidade,
-        num,
-        func,
-        funcRenderTell,
-        funcRenderEnd,
-        objPhone,
-        funcDeleteneNum,
-        funcCancel
-    }){
-    return(
-        <div className={styles.body}>
-            {context01}
-            {context02}
-            <h1>Página de Criar Contatos</h1>
-            <hr></hr>
-            <Container>
-                <Row className={styles.rowTop}>
-                    <Col className={styles.colOne}>
-                        <h1 style={{fontWeight: '300'}}>Contato</h1>
-                        <Form className={styles.formContato}>
-                            <Form.Group controlId="formGridName">
-                            <Form.Label>Nome</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                placeholder="Fulano de Tal" 
-                                required 
-                                minLength="1" 
-                                maxlength="250"
-                                onChange={changeName}
-                                value={nome}
-                            />
-                            </Form.Group>
-        
-                            <Form.Group controlId="formGridEmail">
-                            <Form.Label>E-mail</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                placeholder="fulado@gmail.com" 
-                                required 
-                                minLength="1" 
-                                maxlength="250"
-                                onChange={changeEmail}
-                                value={email}
-                            />
-                            </Form.Group>
-                        </Form>
-                    </Col>
-
-                    <Col>
-                        <h1 style={{fontWeight: '300', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                            Telefones 
-                            
-                            <OverlayTrigger
-                                placement="right"
-                                delay={{ show: 250, hide: 400 }}
-                                overlay={funcRenderTell}
-                                >
-                                <Button onClick={() => func({destino: 'criar', num: '', idNum: ''})} variant="success"><span class="material-symbols-outlined">add</span></Button>
-                            </OverlayTrigger>
-                        </h1>
-                        <div className={styles.formTelefone}>
-                            {
-                                objPhone.map((item) => (
-                                    <div>
-                                        <div className={styles.numero}>{item.telefone}</div>
-
-                                        <div className={styles.spanEdit}><span onClick={() => func({destino: 'editar', num: item.telefone, idNum: item.id})} class="material-symbols-outlined">edit</span></div>
-
-                                        <div className={styles.spanDelete}><span onClick={() => funcDeleteneNum({idNumber: item.id})} class="material-symbols-outlined">delete</span></div>
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <h1 style={{fontWeight: '300'}}>Endereço</h1>
-                    {
-                        rua == undefined
-                        ?
-                            <div className={styles.criarEndereco}>
-                                <h1>O Contato ainda não possui endereço. Adicione um Novo!</h1>
-                                <OverlayTrigger
-                                    placement="right"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={funcRenderEnd}
-                                    >
-                                    <Button onClick={() => func({destino: 'criar', num: '', idNum: ''})} variant="success"><span class="material-symbols-outlined">add</span></Button>
-                                </OverlayTrigger>
-                            </div>
-                        :
-                            <Form className={styles.formEndereco}>
-                                <Row>
-                                    <Form.Group as={Col} controlId="formGridCity">
-                                    <Form.Label>Cidade</Form.Label>
-                                    <Form.Control 
-                                        type="text" 
-                                        placeholder="Rio de Janeiro" 
-                                        required 
-                                        minLength="1" 
-                                        maxlength="250"
-                                        onChange={changeCity}
-                                        value={cidade}
-                                    />
-                                    </Form.Group>
-            
-                                    <Form.Group as={Col} controlId="formGridReigh">
-                                    <Form.Label>Bairro</Form.Label>
-                                    <Form.Control 
-                                        type="text" 
-                                        placeholder="Centro" 
-                                        required 
-                                        minLength="1" 
-                                        maxlength="250"
-                                        onChange={changeReigh}
-                                        value={bairro}
-                                    />
-                                    </Form.Group>
-                                </Row>
-
-                                <Row>
-                                    <Form.Group as={Col} controlId="formGridRoad">
-                                    <Form.Label>Rua</Form.Label>
-                                    <Form.Control 
-                                        type="text" 
-                                        placeholder="7 de Setembro" 
-                                        required 
-                                        minLength="1" 
-                                        maxlength="250"
-                                        onChange={changeRoad}
-                                        value={rua}
-                                    />
-                                    </Form.Group>
-            
-                                    <Form.Group as={Col} controlId="formGridNumber">
-                                    <Form.Label>Nº</Form.Label>
-                                    <Form.Control 
-                                        type="text" 
-                                        placeholder="10" 
-                                        required 
-                                        minLength="1" 
-                                        maxlength="250"
-                                        onChange={changeNumber}
-                                        value={num}
-                                    />
-                                    </Form.Group>
-                                </Row>
-                            </Form>
-                    }
-                    
-                </Row>
-            </Container>
-            <div className={styles.contButtons}>
-                <Button variant="success" size="sm" onClick={() => func({destino: 'voltar', num: '', idNum: ''})}>
-                    Salvar Alterações<span class="material-symbols-outlined">check</span>
-                </Button>
     
                 <Button variant="danger" size="sm" onClick={funcCancel}>
                     Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
                 </Button>
+
+                <Modal
+                    show={show.has_show}
+                    onHide={funcHandleClose}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>{show.title}</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        Para onde deseja ser redirecionado?
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={navPagInicial}>
+                            Página Inicial
+                        </Button>
+                        <Button variant="primary" onClick={funcNavCont}>
+                            Edição de Contatos
+                        </Button>
+                        <Button variant="primary" onClick={funcNavTell}>
+                            Edição de Telefones
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         </div>
     )
-}*/
+}
 
 function Load(){
     return(

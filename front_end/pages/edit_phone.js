@@ -366,23 +366,6 @@ function Forms({
     )
 }
 
-/*
-
-<Button variant="primary" onClick={handleShow}>
-                    Launch static backdrop modal
-                </Button>
-
-<div className={styles.contButtons}>
-                <Button variant="success" size="sm" onClick={funcSuccess}>
-                    Salvar Alterações<span class="material-symbols-outlined">check</span>
-                </Button>
-
-                <Button variant="danger" size="sm" onClick={funcCancel}>
-                    Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
-                </Button>
-            </div>
-*/
-
 function Load(){
     return(
         <div className={styles.fade}>

@@ -5,6 +5,7 @@ import {notification, message} from 'antd'
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 
 export default function CreatePhone(){
 
@@ -13,6 +14,11 @@ export default function CreatePhone(){
     console.log(id)
 
     const [numTell, setNum] = useState('')
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const [api, contextHolder2] = notification.useNotification();
     const openNotification = ({placement, title, descricao}) => {
@@ -67,6 +73,7 @@ export default function CreatePhone(){
     }
 
     const createNum = async ({objData}) => {
+        console.log('entrou no create num')
         fetch(`http://127.0.0.1:8000/telefones/`, {
         method: 'POST',
         headers: {
@@ -94,14 +101,17 @@ export default function CreatePhone(){
         });
     }
 
-    const cancelOperation = () => {
-        openNotification({placement: 'topRight', title: 'Cancelamento', descricao: 'A Operação Foi Cancelada!'})
-        setTimeout(function () {
-            router.push({
-                pathname: './edit_phone',
-                query: {id: id}
-            })
-        }, 1500)
+    const navPagAnterior = () => {
+        router.push({
+            pathname: './edit_phone',
+            query: {id: id}
+        })
+    }
+
+    const navContacts = () => {
+        router.push({
+            pathname: '../contacts'
+        })
     }
 
     return(
@@ -115,7 +125,11 @@ export default function CreatePhone(){
                         func={formataDado} 
                         context={contextHolder}
                         context2={contextHolder2}
-                        funcCancel={cancelOperation}
+                        show={show}
+                        funcHandleClose={handleClose}
+                        funcHandleShow={handleShow}
+                        navPagInicial={navContacts}
+                        navEditCont={navPagAnterior}
                     />
                 :
                     <Load/>
@@ -134,7 +148,19 @@ function Load(){
     )
 }
 
-function Body({change, formValue, func, context, context2, funcCancel}){
+function Body({
+    change, 
+    formValue, 
+    func, 
+    context, 
+    context2, 
+    funcCancel,
+    show,
+    funcHandleClose,
+    funcHandleShow,
+    navPagInicial,
+    navEditCont
+    }){
 
     return(
         <>
@@ -159,9 +185,33 @@ function Body({change, formValue, func, context, context2, funcCancel}){
                 <div className={styles.contButtons}>
                     <Button variant="success" size="sm" onClick={func}>Criar <span class="material-symbols-outlined">done</span></Button>
     
-                    <Button variant="danger" size="sm" onClick={funcCancel}>
+                    <Button variant="danger" size="sm" onClick={funcHandleShow}>
                         Cancelar Operação<span class="material-symbols-outlined">cancel</span>
                     </Button>
+
+                    <Modal
+                        show={show}
+                        onHide={funcHandleClose}
+                        backdrop="static"
+                        keyboard={false}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Operação Cancelada</Modal.Title>
+                        </Modal.Header>
+
+                        <Modal.Body>
+                            Para onde deseja ser redirecionado?
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={navPagInicial}>
+                                Página Inicial
+                            </Button>
+                            <Button variant="primary" onClick={navEditCont}>
+                                Voltar a Página anterior
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             </Form>
         </>
