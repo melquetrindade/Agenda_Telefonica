@@ -73,7 +73,6 @@ export default function CreatePhone(){
     }
 
     const createNum = async ({objData}) => {
-        console.log('entrou no create num')
         fetch(`http://127.0.0.1:8000/telefones/`, {
         method: 'POST',
         headers: {
@@ -97,7 +96,7 @@ export default function CreatePhone(){
             }, 1500);
         })
         .catch(error => {
-            console.error('Erro durante a requisição POST:', error);
+            openNotification({placement: 'topRight', title: 'Erro', descricao: 'Este número já pertence a alguém da sua Agenda!'})
         });
     }
 

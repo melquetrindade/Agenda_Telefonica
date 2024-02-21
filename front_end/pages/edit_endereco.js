@@ -277,7 +277,6 @@ export default function EditContacts(){
         router.push({
             pathname: './contacts'
         })
-        
     }
 
     const navTelefone = () => {
@@ -464,6 +463,10 @@ function Forms({
                     </Button>
                 }
     
+                <Button variant="primary" size="sm" onClick={funcNavTell}>
+                    Editar Telefones<span class="material-symbols-outlined">navigate_next</span>
+                </Button>
+
                 <Button variant="danger" size="sm" onClick={funcCancel}>
                     Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
                 </Button>
