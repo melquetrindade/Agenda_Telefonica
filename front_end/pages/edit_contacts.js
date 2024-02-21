@@ -22,6 +22,8 @@ export default function EditContacts(){
         status: 'load'
     })
 
+    const [has_replay, setReplay] = useState('load')
+
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -54,16 +56,110 @@ export default function EditContacts(){
             });
         }, 1000);
     };
+    const editaContato = async ({objData}) => {
+        fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(objData),
+        })
+        .then(response => {
+            
+            if (!response.ok) {
+                console.log('falha ao fazer a edição')
+                throw new Error(`Erro na requisição: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('edição realizada com sucesso')
+            handleShow()
+            
+        })
+        .catch(error => {
+            console.error('Erro durante a requisição POST:', error);
+        });
+    }
 
-    const formatData = ({destino, num, idNum}) => {
+    console.log(`has_replay: ${has_replay}`)
 
+    const checkEmail = async ({email}) => {
+        fetch(`http://127.0.0.1:8000/contatos/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        })
+        .then(response => {
+            
+            if (!response.ok) {
+                //console.log('falha ao carregar email')
+                throw new Error(`Erro na requisição: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            var filterData = data.filter(item => item.email == email && item.id != id)
+            if(filterData.length != 0){
+                setReplay('verdadeiro')
+            }
+            else{
+                setReplay('falso')
+            }
+        })
+        .catch(error => {
+            console.error('Erro durante a requisição POST:', error);
+        });
+    }
+
+    if(has_replay == 'falso'){
+        setReplay('load')
+        console.log('continua na função')
         const dataContato = {
             nome: document.getElementById('formGridName').value,
             email: document.getElementById('formGridEmail').value,
         };
 
         var ok = true
+        try{
+            Object.keys(dataContato).forEach(key => {
+                if(!dataContato[key]){
+                    console.log(`entrou aqui: ${key}`)
+                    ok = false
+                    openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Preencha os Campos Obrigatórios'})
+                    throw new Error('StopIteration');
+                    
+                }
+            });
+        } catch(error){
+            if (error.message !== 'StopIteration') {
+                //throw error;
+                console.log('campo em branco')
+            }
+        }
 
+        if(ok){
+            console.log('entrou para o editar')
+            editaContato({objData: dataContato})
+        }
+    }
+    if(has_replay == 'verdadeiro'){
+        setReplay('load')
+        openNotification({placement: 'topRight', title: 'ERRO', descricao: 'Este E-mail já está sendo usado!'})
+    }
+
+    const formatData = () => {
+        
+        checkEmail({email: document.getElementById('formGridEmail').value})
+
+        /*
+        const dataContato = {
+            nome: document.getElementById('formGridName').value,
+            email: document.getElementById('formGridEmail').value,
+        };
+
+        var ok = true
         try{
             Object.keys(dataContato).forEach(key => {
                 if(!dataContato[key]){
@@ -81,24 +177,9 @@ export default function EditContacts(){
         }
 
         if(ok){
-            setEditData({
-                statusCont: editData.statusCont,
-                statusEnd: editData.statusEnd,
-                destino: destino,
-                id: id,
-                num: num,
-                idPhone: idNum,
-            })
+            editaContato({objData: dataContato})
+        }*/
 
-            if(!editData.statusCont){
-                editaContato({objData: dataContato})
-            }
-            if(!editData.statusEnd && editData.statusCont && objEndereco.rua != undefined){
-                //console.log('entrou para editar o endereco')
-                editaEndereco({objData: dataEndereco})
-            }
-            
-        }
     }
 
     const carregaContato = async () => {
@@ -138,30 +219,6 @@ export default function EditContacts(){
 
     if(objContato.status == 'load' && id != undefined){
         carregaContato()
-    }
-
-    const editaContato = async ({objData}) => {
-        fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(objData),
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.log('falha ao fazer a edição')
-                throw new Error(`Erro na requisição: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('edição realizada com sucesso')
-            
-        })
-        .catch(error => {
-            console.error('Erro durante a requisição POST:', error);
-        });
     }
 
     const handleChangeName = (e) => {
@@ -223,7 +280,7 @@ export default function EditContacts(){
                     funcCancel={cancelOperation}
                     show={show}
                     funcHandleClose={handleClose}
-                    funcHandleShow={handleShow}
+                    funcFormatData={formatData}
                 />
             }
         </main>
@@ -241,7 +298,7 @@ function Forms({
     funcCancel,
     show,
     funcHandleClose,
-    funcHandleShow,
+    funcFormatData
     }){
 
     return(
@@ -286,7 +343,7 @@ function Forms({
 
             </Container>
             <div className={styles.contButtons}>
-                <Button variant="success" size="sm" >
+                <Button variant="success" size="sm" onClick={funcFormatData}>
                     Salvar Alterações<span class="material-symbols-outlined">check</span>
                 </Button>
 
