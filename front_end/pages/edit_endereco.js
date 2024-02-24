@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useRouter } from "next/router";
-import styles from '../styles/edit_contacts.module.css'
+import styles from '../styles/edit_address.module.css'
 import {notification, message} from 'antd'
 
 import Button from 'react-bootstrap/Button';
@@ -9,6 +9,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export default function EditContacts(){
 
@@ -335,25 +336,6 @@ export default function EditContacts(){
     )
 }
 
-function CreateEnd(){
-    return(
-        <h1>Cria um endereço</h1>
-    )
-
-    /*
-    <div className={styles.criarEndereco}>
-                                <h1>O Contato ainda não possui endereço. Adicione um Novo!</h1>
-                                <OverlayTrigger
-                                    placement="right"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={funcRenderEnd}
-                                    >
-                                    <Button onClick={() => func({destino: 'criar', num: '', idNum: ''})} variant="success"><span class="material-symbols-outlined">add</span></Button>
-                                </OverlayTrigger>
-                            </div>
-    */
-}
-
 function Forms({
     context01, 
     context02, 
@@ -379,7 +361,13 @@ function Forms({
         <div className={styles.body}>
             {context01}
             {context02}
-            <h1>Endereço</h1>
+            <div className={styles.contProgress}>
+                <ProgressBar className={styles.progress} now={47}/>
+                <div className={styles.spanEmail}><span class="material-symbols-outlined">contact_mail</span></div>
+                <div className={styles.spanHome}><span class="material-symbols-outlined">home</span></div>
+                <div className={styles.spanCall}><span class="material-symbols-outlined">call</span></div>
+            </div>
+            <h1 style={{fontWeight: '300', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>Endereço</h1>
             {
                 status == 'not_exist'
                 ?

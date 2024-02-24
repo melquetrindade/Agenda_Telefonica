@@ -22,6 +22,35 @@
   width: 50vw;
 }
 
+.contProgress{
+  margin-top: 3rem;
+  margin-bottom: -6rem;
+}
+
+.spanEmail{
+  transform: translate(310%, -33px);
+  width: min-content;
+}
+
+.spanHome{
+  transform: translate(750%, -80px);
+  width: min-content;
+}
+
+.spanCall{
+  transform: translate(1240%, -127px);
+  width: min-content;
+}
+
+.spanCall > span, .spanHome > span, .spanEmail > span{
+  size: 2rem;
+  border-radius: 50%;
+  border: 2px solid rgb(41, 75, 244);
+  padding: 10px;
+  background-color: rgb(41, 75, 244);
+  color: white;
+}
+
 .formTelefone{
   display: flex;
   align-items: center;

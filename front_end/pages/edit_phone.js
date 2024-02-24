@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export default function EditContacts(){
 
@@ -291,6 +292,12 @@ function Forms({
         <div className={styles.body}>
             {context01}
             {context02}
+            <div className={styles.contProgress}>
+                <ProgressBar className={styles.progress} now={80}/>
+                <div className={styles.spanEmail}><span class="material-symbols-outlined">contact_mail</span></div>
+                <div className={styles.spanHome}><span class="material-symbols-outlined">home</span></div>
+                <div className={styles.spanCall}><span class="material-symbols-outlined">call</span></div>
+            </div>
             <h1 style={{fontWeight: '300', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 Telefones 
                 

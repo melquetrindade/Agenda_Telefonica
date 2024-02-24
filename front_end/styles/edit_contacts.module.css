@@ -22,83 +22,40 @@
   width: 50vw;
 }
 
-.formContato, .formTelefone, .formEndereco{
+
+.contProgress{
+  margin-top: 3rem;
+  margin-bottom: -6rem;
+}
+
+.spanEmail{
+  transform: translate(310%, -33px);
+  width: min-content;
+}
+
+.spanHome{
+  transform: translate(750%, -80px);
+  width: min-content;
+}
+
+.spanCall{
+  transform: translate(1240%, -127px);
+  width: min-content;
+}
+
+.spanCall > span, .spanHome > span, .spanEmail > span{
+  size: 2rem;
+  border-radius: 50%;
+  border: 2px solid rgb(41, 75, 244);
+  padding: 10px;
+  background-color: rgb(41, 75, 244);
+  color: white;
+}
+
+.formContato{
   border: 1px solid black;
   padding: 10px;
   border-radius: 8px;
-}
-
-.formTelefone{
-  max-height: 10.1rem;
-  overflow-y: auto;
-}
-
-.formTelefone > div{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 7px;
-  width: min-content;
-  padding: 6px;
-  border: 1px solid black;
-  border-radius: 5px;
-}
-
-.spanEdit{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(0, 34, 255);
-  margin-left: 10px;
-  padding: 6px;
-  border-radius: 5px;
-  color: white;
-}
-
-.spanEdit:hover{
-  cursor: pointer;
-}
-
-.spanDelete{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: red;
-  margin-left: 10px;
-  padding: 6px;
-  border-radius: 5px;
-  color: white;
-}
-
-.spanDelete:hover{
-  cursor: pointer;
-}
-
-.formTelefone > div > span{
-  margin-left: 20px;
-}
-
-.rowTop{
-  margin-bottom: 1rem;
-}
-
-.buttonAdd{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  height: 2rem;
-  padding: 4px;
-  border-radius: 10px;
-  background-color: rgb(45, 239, 10);
-  transition: 0.3s;
-}
-
-.buttonAdd:hover{
-  cursor: pointer;
-  background-color: rgb(127, 255, 104);
 }
 
 .contButtons{
@@ -116,18 +73,4 @@
 
 .contButtons span{
   margin-left: 10px;
-}
-
-.criarEndereco{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid black;
-  padding: 5px;
-  border-radius: 10px;
-}
-
-.criarEndereco > h1{
-  font-size: 1.5rem;
-  font-weight: 300;
 }

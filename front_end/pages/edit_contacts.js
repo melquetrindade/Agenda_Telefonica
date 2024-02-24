@@ -9,6 +9,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export default function EditContacts(){
 
@@ -305,7 +306,13 @@ function Forms({
         <div className={styles.body}>
             {context01}
             {context02}
-            <h1>Contatos</h1>
+            <div className={styles.contProgress}>
+                <ProgressBar className={styles.progress} now={20}/>
+                <div className={styles.spanEmail}><span class="material-symbols-outlined">contact_mail</span></div>
+                <div className={styles.spanHome}><span class="material-symbols-outlined">home</span></div>
+                <div className={styles.spanCall}><span class="material-symbols-outlined">call</span></div>
+            </div>
+            <h1 style={{fontWeight: '300', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>Contatos</h1>
             <hr></hr>
             <Container>
                 <Row className={styles.rowTop}>
