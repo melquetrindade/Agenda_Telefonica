@@ -22,6 +22,12 @@
   width: 70vw;
 }
 
+.nameTitle{
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+
 .alerta{
   font-weight: 300;
   font-size: 1.5rem;
@@ -53,6 +59,12 @@
   overflow: hidden; /* oculta qualquer conteúdo que ultrapasse a largura do contêiner */
   text-overflow: ellipsis; /* exibe um indicador de elipse (...) quando o texto é cortado */
   line-height: 1;
+}
+
+.contPhones{
+  min-height: 1.5rem;
+  max-height: 16.1rem;
+  overflow-y: auto;
 }
 
 @media screen and (max-width: 650px) {

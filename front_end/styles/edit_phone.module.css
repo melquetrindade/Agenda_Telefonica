@@ -27,24 +27,24 @@
   align-items: center;
   justify-content: center;
   border: 1px solid black;
-  padding: 10px;
   border-radius: 8px;
   min-width: 25rem;
   max-width: 25rem;
-  min-height: 1.1rem;
-  max-height: 14.1rem;
+  min-height: 1.5rem;
+  max-height: 20.1rem;
   overflow-y: auto;
 }
 
 .contPhones{
-  margin-top: 0px;
+  max-height: 20.1rem;
 }
 
 .contPhones > div{
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: 7px;
+  margin-bottom: 7px;
   width: min-content;
   padding: 6px;
   border: 1px solid black;
@@ -112,4 +112,93 @@
 
 .contButtons span{
   margin-left: 10px;
+}
+
+/* ======================== */
+
+
+@media screen and (max-width: 320px) {
+  .body{
+    width: 100%;
+  }
+  .formTelefone{
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 14rem;
+    max-height: 14rem;
+  }
+  .contPhones{
+    max-height: 14rem;
+  }
+  .contButtons > Button{
+    margin-top: 0px;
+  }
+}
+
+@media screen and (min-width: 321px) and (max-width: 389px) {
+  .body{
+    width: 100%;
+  }
+  .formTelefone{
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 18rem;
+    max-height: 18rem;
+  }
+  .contPhones{
+    max-height: 18rem;
+  }
+  .contButtons > Button{
+    margin-top: 10px;
+  }
+}
+
+@media screen and (min-width: 390px) and (max-width: 650px) {
+  .body{
+    width: 100%;
+  }
+  .formTelefone{
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 20rem;
+    max-height: 20rem;
+  }
+  .contPhones{
+    max-height: 20rem;
+  }
+  .contButtons > Button{
+    margin-top: 20px;
+  }
+}
+
+@media screen and (min-width: 651px) and (max-width: 870px){
+  .body{
+    width: 100%;
+  }
+  .formTelefone{
+    min-height: 25rem;
+    max-height: 25rem;
+  }
+  .contPhones{
+    max-height: 25rem;
+  }
+  .contButtons > Button{
+    margin-top: 20px;
+  }
+}
+
+@media screen and (min-width: 871px) and (max-width: 1350px){
+  .body{
+    width: 100%;
+  }
+  .formTelefone{
+    min-height: 25rem;
+    max-height: 25rem;
+  }
+  .contPhones{
+    max-height: 25rem;
+  }
+  .contButtons > Button{
+    margin-top: 20px;
+  }
 }

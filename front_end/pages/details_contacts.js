@@ -149,17 +149,6 @@ export default function DetailsContacts(){
           }
     }
 
-    /*
-    if(status.dadosTell == undefined && status.statesTell == 'load' && id != undefined){
-        carregaTelefones()
-    }
-
-    if(status.dadosEnd == undefined && status.statesEnd == 'load' && id != undefined){
-        carregaEnderecos()
-    }*/
-
-    // =============
-
     if(status.statesContato == 'load' && id != undefined){
         carregaContato()
     }
@@ -193,16 +182,11 @@ export default function DetailsContacts(){
 }
 
 function Listar({objTell, objEnd, objCont, nameContato}){
-    console.log('entrou no listar')
-    console.log(objCont)
-    console.log(objTell)
-    console.log(objEnd)
-
 
     return(
         <main className={styles.body}>
             <Container>
-                <h1>Informações de {nameContato}</h1>
+                <h1 className={styles.nameTitle}>Informações de {nameContato}</h1>
                 <hr></hr>
                 <Row className={styles.containerCol}>
                     <Col>
@@ -214,7 +198,7 @@ function Listar({objTell, objEnd, objCont, nameContato}){
                                 ?
                                     <h1 className={styles.alerta}>O contato não possui Telefones!</h1>
                                 :
-                                <div>
+                                <div className={styles.contPhones}>
                                     {
                                         objTell.map((item, index) => (
                                                 <div>
