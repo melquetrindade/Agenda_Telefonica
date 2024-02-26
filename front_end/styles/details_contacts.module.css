@@ -67,12 +67,54 @@
   overflow-y: auto;
 }
 
-@media screen and (max-width: 650px) {
-  .body{
-    width: 95vw;
-  }
 
+/* ======================== */
+
+
+@media screen and (max-width: 320px) {
+  .body{
+    width: 90vw;
+  }
+  .nameTitle{
+    font-size: 1.2rem;
+  }
   .contextTell{
-    margin-right: 0px;
+    margin-bottom: 20px;
+  }
+  .contextTell > h1{
+    font-size: 1.5rem;
+  }
+  .contextEnd{
+    margin-bottom: 20px;
+  }
+  .contextEnd > h1{
+    font-size: 1.5rem;
+  }
+  .contextContato > h1{
+    font-size: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 321px) and (max-width: 389px) {
+  .body{
+    width: 90vw;
+  }
+}
+
+@media screen and (min-width: 390px) and (max-width: 650px) {
+  .body{
+    width: 90vw;
+  }
+}
+
+@media screen and (min-width: 651px) and (max-width: 870px){
+  .body{
+    width: 70vw;
+  }
+}
+
+@media screen and (min-width: 871px) and (max-width: 1350px){
+  .body{
+    width: 60vw;
   }
 }
