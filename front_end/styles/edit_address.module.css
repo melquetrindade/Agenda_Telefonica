@@ -57,22 +57,6 @@
   border-radius: 8px;
 }
 
-.formTelefone{
-  max-height: 10.1rem;
-  overflow-y: auto;
-}
-
-.formTelefone > div{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 7px;
-  width: min-content;
-  padding: 6px;
-  border: 1px solid black;
-  border-radius: 5px;
-}
-
 .contButtons{
   display: flex;
   align-items: center;
@@ -102,4 +86,205 @@
 .criarEndereco > h1{
   font-size: 1.5rem;
   font-weight: 300;
+}
+
+
+@media screen and (max-width: 320px) {
+  .body{
+    width: 90%;
+    margin: auto;
+  }
+  .contProgress{
+    margin-top: 2rem;
+    margin-bottom: -5.5rem;
+  }
+  .spanEmail{
+    transform: translate(110%, -28px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(335%, -66px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(550%, -103px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 5px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.6rem;
+    margin-top: 20px;
+    width: 30%;
+  }
+  .contButtons span{
+    font-size: 1.2rem;
+    margin-left: 0px;
+  }
+}
+
+@media screen and (min-width: 321px) and (max-width: 389px) {
+  .body{
+    width: 90%;
+    margin: auto;
+  }
+  .contProgress{
+    margin-top: 3rem;
+    margin-bottom: -5rem;
+  }
+  .spanEmail{
+    transform: translate(140%, -28px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(380%, -66px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(620%, -103px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 5px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.6rem;
+    margin-top: 30px;
+    width: 30%;
+  }
+  .contButtons span{
+    font-size: 1.2rem;
+    margin-left: 0px;
+  }
+}
+
+@media screen and (min-width: 390px) and (max-width: 650px) {
+  .body{
+    width: 90%;
+    margin: auto;
+  }
+  .contProgress{
+    margin-top: 3rem;
+    margin-bottom: -5rem;
+  }
+  .spanEmail{
+    transform: translate(180%, -28px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(450%, -66px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(720%, -103px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 5px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.7rem;
+    margin-top: 30px;
+    width: 30%;
+  }
+  .contButtons span{
+    font-size: 1.2rem;
+    margin-left: 0px;
+  }
+}
+
+@media screen and (min-width: 651px) and (max-width: 870px){
+  .body{
+    width: 100%;
+    margin: auto;
+  }
+  .contProgress{
+    margin-top: 3rem;
+    margin-bottom: -6rem;
+  }
+  .spanEmail{
+    transform: translate(150%, -32px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(430%, -80px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(720%, -128px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 10px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.9rem;
+    margin-top: 30px;
+    width: 30%;
+  }
+  .contButtons span{
+    font-size: 1.5rem;
+    margin-left: 0px;
+  }
+}
+
+@media screen and (min-width: 871px) and (max-width: 1350px){
+  .body{
+    width: 100%;
+    margin: auto;
+  }
+  .contProgress{
+    margin-top: 3rem;
+    margin-bottom: -6rem;
+  }
+  .spanEmail{
+    transform: translate(150%, -32px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(425%, -80px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(720%, -128px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 10px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.9rem;
+    margin-top: 30px;
+    width: 30%;
+  }
+  .contButtons span{
+    font-size: 1.5rem;
+    margin-left: 0px;
+  }
 }

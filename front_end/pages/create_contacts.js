@@ -4,9 +4,12 @@ import {notification, message} from 'antd'
 import { useRouter } from "next/router";
 
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Modal from 'react-bootstrap/Modal';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export default function DeleteContacts(){
 
@@ -14,8 +17,7 @@ export default function DeleteContacts(){
 
   const [inputValue, setInput] = useState({
     nome: '',
-    endereco: '',
-    idade: '',
+    email: '',
   })
 
   const [api, contextHolder] = notification.useNotification();
@@ -52,8 +54,7 @@ export default function DeleteContacts(){
 
     const registerData = {
       nome: document.getElementById('formGridName').value,
-      endereco: document.getElementById('formGridAddress').value,
-      idade: document.getElementById('formGridAge').value,
+      email: document.getElementById('formGridEmail').value,
     };
 
     if(!registerData.nome){
@@ -140,53 +141,86 @@ export default function DeleteContacts(){
       <main className={styles.main}>
         {contextHolder}
         {contextHolder2}
-        <h1>Página de Criar Contatos</h1>
+        <div className={styles.contProgress}>
+          <ProgressBar className={styles.progress} now={20}/>
+          <div className={styles.spanEmail}><span class="material-symbols-outlined">contact_mail</span></div>
+          <div className={styles.spanHome}><span class="material-symbols-outlined">home</span></div>
+          <div className={styles.spanCall}><span class="material-symbols-outlined">call</span></div>
+        </div>
+        <h1 style={{fontWeight: '300', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>Contatos</h1>
         <hr></hr>
-        <Form>
-            <Row className="mb-3">
-                <Form.Group as={Col} controlId="formGridName">
-                <Form.Label>Nome</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  placeholder="Fulano de Tal" 
-                  required 
-                  minLength="1" 
-                  maxlength="250"
-                  onChange={handleChangeName}
-                  value={inputValue.nome}
-                />
-                </Form.Group>
+        <Container>
+            <Row className={styles.rowTop}>
+                <Col className={styles.colOne}>
+                    <Form className={styles.formContato}>
+                        <Form.Group controlId="formGridName">
+                        <Form.Label>Nome</Form.Label>
+                        <Form.Control 
+                            type="text" 
+                            placeholder="Fulano de Tal" 
+                            required 
+                            minLength="1" 
+                            maxlength="250"
+                            onChange={changeName}
+                            value={nome}
+                        />
+                        </Form.Group>
+    
+                        <Form.Group controlId="formGridEmail">
+                        <Form.Label>E-mail</Form.Label>
+                        <Form.Control 
+                            type="text" 
+                            placeholder="fulado@gmail.com" 
+                            required 
+                            minLength="1" 
+                            maxlength="250"
+                            onChange={changeEmail}
+                            value={email}
+                        />
+                        </Form.Group>
+                    </Form>
+                </Col>
 
-                <Form.Group as={Col} controlId="formGridAge">
-                <Form.Label>Idade</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  placeholder="18" 
-                  required 
-                  minLength="1" 
-                  maxlength="3"
-                  onChange={handleChangeAge}
-                  value={inputValue.idade}
-                />
-                </Form.Group>
             </Row>
 
-            <Form.Group className="mb-3" controlId="formGridAddress">
-                <Form.Label>Endereço</Form.Label>
-                <Form.Control 
-                  placeholder="Rua da Água" 
-                  required 
-                  minLength="1" 
-                  maxlength="250"
-                  value={inputValue.endereco}
-                  onChange={handleChangeAddress}
-                />
-            </Form.Group>
-
-            <Button variant="primary" onClick={formatData}>
-                Cadastrar
+        </Container>
+        <div className={styles.contButtons}>
+            <Button variant="success" size="sm" onClick={funcFormatData}>
+                Salvar Alterações<span class="material-symbols-outlined">check</span>
             </Button>
-        </Form>
+
+            <Button variant="primary" size="sm" onClick={funcNext}>
+                Editar Endereço<span class="material-symbols-outlined">navigate_next</span>
+            </Button>
+
+            <Button variant="danger" size="sm" onClick={funcCancel}>
+                Cancelar Alterações<span class="material-symbols-outlined">cancel</span>
+            </Button>
+
+            <Modal
+                show={show}
+                onHide={funcHandleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Alterações realizadas com sucesso!</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    Para onde deseja ser redirecionado?
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={funcCancel}>
+                        Página Inicial
+                    </Button>
+                    <Button variant="primary" onClick={funcNext}>
+                        Edição de Endereços
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
       </main>
   )
 }

@@ -57,6 +57,7 @@ export default function EditContacts(){
             });
         }, 1000);
     };
+    
     const editaContato = async ({objData}) => {
         fetch(`http://127.0.0.1:8000/contatos/${id}/`, {
         method: 'PUT',

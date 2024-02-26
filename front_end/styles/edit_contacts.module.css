@@ -74,3 +74,201 @@
 .contButtons span{
   margin-left: 10px;
 }
+
+/* ======================== */
+
+
+@media screen and (max-width: 320px) {
+  .body{
+    width: 90vw;
+  }
+  .contProgress{
+    margin-top: 2rem;
+    margin-bottom: -5rem;
+  }
+  .spanEmail{
+    transform: translate(140%, -28px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(335%, -66px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(550%, -103px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 5px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.6rem;
+    margin-top: 20px;
+    width: 30%;
+  }
+  .contButtons span{
+    font-size: 1.2rem;
+    margin-left: 0px;
+  }
+}
+
+@media screen and (min-width: 321px) and (max-width: 389px) {
+  .body{
+    width: 90vw;
+  }
+  .contProgress{
+    margin-top: 3rem;
+    margin-bottom: -5rem;
+  }
+  .spanEmail{
+    transform: translate(150%, -28px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(380%, -66px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(610%, -103px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 5px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.6rem;
+    margin-top: 20px;
+    width: 30%;
+  }
+  .contButtons span{
+    font-size: 1.2rem;
+    margin-left: 0px;
+  }
+}
+
+@media screen and (min-width: 390px) and (max-width: 650px) {
+  .body{
+    width: 90vw;
+  }
+  .contProgress{
+    margin-top: 3rem;
+    margin-bottom: -5rem;
+  }
+  .spanEmail{
+    transform: translate(150%, -29px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(420%, -71px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(680%, -112px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 7px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.8rem;
+    margin-top: 30px;
+    width: 30%;
+  }
+  .contButtons span{
+    font-size: 1.2rem;
+    margin-left: 0px;
+  }
+}
+
+@media screen and (min-width: 651px) and (max-width: 870px){
+  .body{
+    width: 70vw;
+  }
+  .contProgress{
+    margin-top: 3rem;
+    margin-bottom: -5rem;
+  }
+  .spanEmail{
+    transform: translate(190%, -33px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(500%, -81px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(830%, -128px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 1.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 10px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.9rem;
+    margin-top: 30px;
+    width: 31%;
+  }
+  .contButtons span{
+    font-size: 1.2rem;
+    margin-left: 5px;
+  }
+}
+
+@media screen and (min-width: 871px) and (max-width: 1350px){
+  .body{
+    width: 60vw;
+  }
+  .contProgress{
+    margin-top: 3rem;
+    margin-bottom: -5rem;
+  }
+  .spanEmail{
+    transform: translate(180%, -33px);
+    width: min-content;
+  }
+  .spanHome{
+    transform: translate(500%, -81px);
+    width: min-content;
+  }
+  .spanCall{
+    transform: translate(830%, -128px);
+    width: min-content;
+  }
+  .spanCall > span, .spanHome > span, .spanEmail > span{
+    size: 1.5rem;
+    border-radius: 50%;
+    border: 2px solid rgb(41, 75, 244);
+    padding: 10px;
+    background-color: rgb(41, 75, 244);
+    color: white;
+  }
+  .contButtons > Button{
+    font-size: 0.9rem;
+    margin-top: 30px;
+    width: 32%;
+  }
+  .contButtons span{
+    font-size: 1.2rem;
+    margin-left: 7px;
+  }
+}

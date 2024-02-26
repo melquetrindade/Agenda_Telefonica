@@ -306,7 +306,7 @@ function Forms({
                     delay={{ show: 250, hide: 400 }}
                     overlay={funcRender}
                     >
-                    <Button onClick={funcCreateNumber} variant="success"><span class="material-symbols-outlined">add</span></Button>
+                    <Button onClick={funcCreateNumber} variant="success" className={styles.spanAdd}><span class="material-symbols-outlined">add</span></Button>
                 </OverlayTrigger>
             </h1>
             <hr></hr>
