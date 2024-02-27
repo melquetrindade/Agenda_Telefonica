@@ -25,15 +25,6 @@ export default function NavBar(){
                     <Nav.Link href="/contacts">Contatos</Nav.Link>
                     
                 </Nav>
-                <Form className="d-flex">
-                    <Form.Control
-                    type="search"
-                    placeholder="Buscar"
-                    className="me-2"
-                    aria-label="Search"
-                    />
-                    <Button variant="outline-success">Buscar</Button>
-                </Form>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
