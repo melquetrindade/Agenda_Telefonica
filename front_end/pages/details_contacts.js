@@ -187,11 +187,14 @@ function Listar({objTell, objEnd, objCont, nameContato}){
         <main className={styles.body}>
             <Container>
                 <h1 className={styles.nameTitle}>Informações de {nameContato}</h1>
-                <hr></hr>
                 <Row className={styles.containerCol}>
                     <Col>
                         <div className={styles.contextTell}>
-                            <h1>Telefones</h1>
+                            <hr></hr>
+                            <div className={styles.contTitle}>
+                                <h1>Telefones</h1>
+                                <span class="material-symbols-outlined">call</span>
+                            </div>
                             <hr></hr>
                             {
                                 objTell.length == 0
@@ -214,7 +217,11 @@ function Listar({objTell, objEnd, objCont, nameContato}){
                     </Col>
                     <Col>
                         <div className={styles.contextEnd}>
-                            <h1>Endereço</h1>
+                            <hr></hr>
+                            <div className={styles.contTitle}>
+                                <h1>Endereço</h1>
+                                <span class="material-symbols-outlined">home</span>
+                            </div>
                             <hr></hr>
                             {
                                 objEnd.length == 0
@@ -233,7 +240,11 @@ function Listar({objTell, objEnd, objCont, nameContato}){
 
                     <Col>
                             <div className={styles.contextContato}>
-                                <h1>Email</h1>
+                                <hr></hr>
+                                <div className={styles.contTitle}>
+                                    <h1>E-mail</h1>
+                                    <span class="material-symbols-outlined">alternate_email</span>
+                                </div>
                                 <hr></hr>
                                 <p>{objCont.email}</p>
                             </div>

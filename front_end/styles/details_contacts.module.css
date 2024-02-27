@@ -37,8 +37,15 @@
   margin-right: 20px;
 }
 
-.contextTell > h1{
+.contTitle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contTitle > h1{
   font-weight: 300;
+  margin-right: 2rem;
 }
 
 .contextEnd{
@@ -77,20 +84,16 @@
   }
   .nameTitle{
     font-size: 1.2rem;
+    text-align: center;
   }
   .contextTell{
     margin-bottom: 20px;
   }
-  .contextTell > h1{
+  .contTitle > h1{
     font-size: 1.5rem;
+    margin-right: 1rem;
   }
-  .contextEnd{
-    margin-bottom: 20px;
-  }
-  .contextEnd > h1{
-    font-size: 1.5rem;
-  }
-  .contextContato > h1{
+  .contTitle > span{
     font-size: 1.5rem;
   }
 }
@@ -99,11 +102,39 @@
   .body{
     width: 90vw;
   }
+  .nameTitle{
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  .contextTell{
+    margin-bottom: 20px;
+  }
+  .contTitle > h1{
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+  .contTitle > span{
+    font-size: 1.5rem;
+  }
 }
 
 @media screen and (min-width: 390px) and (max-width: 650px) {
   .body{
     width: 90vw;
+  }
+  .nameTitle{
+    font-size: 1.4rem;
+    text-align: center;
+  }
+  .contextTell{
+    margin-bottom: 20px;
+  }
+  .contTitle > h1{
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+  .contTitle > span{
+    font-size: 1.5rem;
   }
 }
 
@@ -111,10 +142,38 @@
   .body{
     width: 70vw;
   }
+  .nameTitle{
+    font-size: 1.6rem;
+    text-align: center;
+  }
+  .contextTell{
+    margin-bottom: 20px;
+  }
+  .contTitle > h1{
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+  .contTitle > span{
+    font-size: 1.5rem;
+  }
 }
 
 @media screen and (min-width: 871px) and (max-width: 1350px){
   .body{
-    width: 60vw;
+    width: 65vw;
+  }
+  .nameTitle{
+    font-size: 1.6rem;
+    text-align: center;
+  }
+  .contextTell{
+    margin-bottom: 20px;
+  }
+  .contTitle > h1{
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+  .contTitle > span{
+    font-size: 1.5rem;
   }
 }
